@@ -23,10 +23,11 @@ extern QueueHandle_t Queue_Breaker;
 extern SemaphoreHandle_t Sem_LCD;
 
 // Shared information about the ball
-extern bool LAUNCHED;
+extern bool ball_launched;
 extern uint8_t ball_x;
 extern uint8_t ball_y;
 extern uint16_t ball_lcd_color;
+extern int ball_dir;   // 0 for LEFT, 1 for RIGHT, 2 for UP, and 3 for DOWN
 
 // Shared coordinates of the tank
 extern uint8_t tank_x;
@@ -47,9 +48,10 @@ void Task_Breaker(void *pvParameters);
 
 /******************************************************************************
  * Helper method to reset the ball according to the current position of the
- * tank, the ball will be placed 1 pixel above the tank, centered at
- * the same x axis, respectively.
+ * tank, the ball will have the same center as the tank, respectively.
  ******************************************************************************/
 void ball_reset(void);
+
+void tank_recover();
 
 #endif /* TASK_BREAKER_H_ */

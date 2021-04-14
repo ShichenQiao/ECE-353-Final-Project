@@ -11,10 +11,11 @@ TaskHandle_t Task_Enemy_Handle;
 
 /******************************************************************************
  * This task manages the random generations and breaks of enemy squares.
+ * Each enemy square will have a Width = Height = 12
  ******************************************************************************/
 void Task_Enemy(void *pvParameters)
 {
-    Enemy_t enemies[4][11];     // Matrix stores information about all enemy squares
+    Enemy_t enemies[8][9];     // Matrix stores information about all enemy squares
     int i, j;       // Loop variables
     int r, c;       // Temp variables, Row and Column indexes
     int x, y;       // Temp variables, X and Y coordinates
@@ -22,8 +23,8 @@ void Task_Enemy(void *pvParameters)
     int left, right;        // X coordinates of the left and right edges of the ball
 
     // Clear the matrix
-    for(i = 0; i < 4; i++)
-        for(j = 0; j < 11; j++)
+    for(i = 0; i < 8; i++)
+        for(j = 0; j < 9; j++)
             enemies[i][j].occupied = false;
 
     while(1)
@@ -117,8 +118,8 @@ void Task_Enemy(void *pvParameters)
             GENERATE = false;       // Reset flag
 
             // Randomly generate row and column indexes
-            c = rand() % 11;
-            r = rand() % 4;
+            c = rand() % 9;
+            r = rand() % 8;
 
             // If the matrix has an empty spot at that place, put a new square in
             if(!enemies[r][c].occupied)
@@ -126,8 +127,8 @@ void Task_Enemy(void *pvParameters)
                 enemies[r][c].occupied = true;      // Set flag
 
                 // Calculate coordinates from indexes
-                x = c * 10 + 16;
-                y = r * 10 + 30;
+                x = c * 12 + 16;
+                y = r * 12 + 32;
 
                 // Randomly generate a color for the new square
                 Color_t color = rand() % 11;
@@ -141,8 +142,8 @@ void Task_Enemy(void *pvParameters)
                 lcd_draw_rectangle(
                     x,
                     y,
-                    10,
-                    10,
+                    12,
+                    12,
                     lcd_color
                 );
 

@@ -93,23 +93,12 @@ void Task_Timer(void *pvParameters)
         {
             S2_PRESSED = true;
             // If the ball is not launched when S2 is pressed, change color
-            if(!LAUNCHED)
+            if(!ball_launched)
             {
                 ball_color = (ball_color + 1) % 11;
                 ball_lcd_color = get_lcd_color(ball_color);
 
                 xSemaphoreTake(Sem_LCD, portMAX_DELAY);
-
-                // Change color of the ball
-                lcd_draw_image(
-                        ball_x,
-                        ball_y,
-                        ballWidthPixels,
-                        ballHeightPixels,
-                        image_ball,
-                        ball_lcd_color,
-                        LCD_COLOR_BLACK
-                );
 
                 // Change color of the tank
                 switch(tank_dir)
@@ -174,8 +163,8 @@ void Task_Timer(void *pvParameters)
             }
         }
 
-        // Generate an enemy square every 1.5 second
-        if(counter++ == 300)
+        // Generate an enemy square every 2 second
+        if(counter++ == 400)
         {
             GENERATE = true;
             counter = 0;

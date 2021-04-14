@@ -68,22 +68,22 @@ void Task_Accelerometer_Bottom_Half(void *pvParameters)
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
         // Send proper message to Queue_Breaker according to Accelerometer readings
-        if(ACCELEROMETER_X_DIR < VOLT_1P50)      // Go Left
+        if(ACCELEROMETER_X_DIR < VOLT_1P40)      // Go Left
         {
             command = BAR_CMD_LEFT;
             xQueueSend(Queue_Breaker, &command, portMAX_DELAY);
         }
-        else if(ACCELEROMETER_X_DIR > VOLT_1P70)     // Go Right
+        else if(ACCELEROMETER_X_DIR > VOLT_1P80)     // Go Right
         {
             command = BAR_CMD_RIGHT;
             xQueueSend(Queue_Breaker, &command, portMAX_DELAY);
         }
-        else if(ACCELEROMETER_Y_DIR < VOLT_1P20)     // Go Down
+        else if(ACCELEROMETER_Y_DIR < VOLT_1P40)     // Go Down
         {
             command = BAR_CMD_DOWN;
             xQueueSend(Queue_Breaker, &command, portMAX_DELAY);
         }
-        else if(ACCELEROMETER_Y_DIR > VOLT_1P40)     // Go Up
+        else if(ACCELEROMETER_Y_DIR > VOLT_1P80)     // Go Up
         {
             command = BAR_CMD_UP;
             xQueueSend(Queue_Breaker, &command, portMAX_DELAY);

@@ -18,7 +18,8 @@ uint8_t ball_x;
 uint8_t ball_y;
 Color_t ball_color;
 uint16_t ball_lcd_color;
-bool LAUNCHED = false;      // Flag variable, true if the ball has been launched
+bool ball_launched = false;      // Flag variable, true if the ball has been launched
+int ball_dir = 2;   // 0 for LEFT, 1 for RIGHT, 2 for UP, and 3 for DOWN
 
 // Shared coordinates of the tank
 uint8_t tank_x;
@@ -53,8 +54,8 @@ void Task_Breaker(void *pvParameters)
     bool tank_update = true;
 
     // Initialize position and color of the ball
-    ball_x = 67;
-    ball_y = 111;
+    ball_x = tank_x;
+    ball_y = tank_y;
     ball_color = GREEN;
     ball_lcd_color = get_lcd_color(ball_color);
 
@@ -64,24 +65,13 @@ void Task_Breaker(void *pvParameters)
 
     xSemaphoreTake(Sem_LCD, portMAX_DELAY);
 
-    // Draw the initial image of the tank
+    // Draw initial image of the tank
     lcd_draw_image(
             tank_x,
             tank_y,
             tankWidthPixels,
             tankHeightPixels,
             tank_upBitmaps,
-            ball_lcd_color,
-            LCD_COLOR_BLACK
-    );
-
-    // Draw the initial image of the ball
-    lcd_draw_image(
-            ball_x,
-            ball_y,
-            ballWidthPixels,
-            ballHeightPixels,
-            image_ball,
             ball_lcd_color,
             LCD_COLOR_BLACK
     );
@@ -111,16 +101,6 @@ void Task_Breaker(void *pvParameters)
 
         // Wait indefinitely until a message is received
         xQueueReceive(Queue_Breaker, &message, portMAX_DELAY);
-
-        // Launch the ball if haven't yet when S1 is pressed during a game
-        if(!LAUNCHED && S1_PRESSED)
-        {
-            LAUNCHED = true;
-        }
-
-        // Recored the previous position of the ball for clearing before move
-        ball_prev_x = ball_x;
-        ball_prev_y = ball_y;
 
         // Examine the message received, move accordingly without passing boarders
         switch(message){
@@ -210,7 +190,7 @@ void Task_Breaker(void *pvParameters)
                 tank_dir = 2;
 
                 // If boarder is met, set flag and not move
-                if(tank_y - 1 < 80)
+                if(tank_y - 1 < 41)
                     tank_update = false;
                 else
                 {
@@ -239,9 +219,20 @@ void Task_Breaker(void *pvParameters)
             }
         }
 
-        if(!LAUNCHED)   // If the ball was not launched
+        // Launch the ball if haven't yet when S1 is pressed during a game
+        if(!ball_launched && S1_PRESSED)
         {
-            // Make the ball follow the tank's position, if it will be uodated
+            ball_dir = tank_dir;
+            ball_launched = true;
+        }
+
+        // Recored the previous position of the ball for clearing before move
+        ball_prev_x = ball_x;
+        ball_prev_y = ball_y;
+
+        if(!ball_launched)   // If the ball was not launched
+        {
+            // Make the ball follow the tank's position, if it will be updated
             if(tank_update)
             {
                 ball_reset();
@@ -250,10 +241,32 @@ void Task_Breaker(void *pvParameters)
         else
         {
             // If the ball is still in the range of the boarders, move it
-            if(ball_y > 32)
+            if(ball_y > 32 && ball_y < 125 && ball_x > 13 && ball_x < 119)
             {
                 // Attempt to move the ball twice as fast as the tank does
-                ball_y -= 2;
+                switch(ball_dir)
+                {
+                    case 0:
+                    {
+                        ball_x -= 2;
+                        break;
+                    }
+                    case 1:
+                    {
+                        ball_x += 2;
+                        break;
+                    }
+                    case 2:
+                    {
+                        ball_y -= 2;
+                        break;
+                    }
+                    case 3:
+                    {
+                        ball_y += 2;
+                        break;
+                    }
+                }
 
                 xSemaphoreTake(Sem_LCD, portMAX_DELAY);
 
@@ -277,6 +290,8 @@ void Task_Breaker(void *pvParameters)
                 );
 
                 xSemaphoreGive(Sem_LCD);
+
+                tank_recover();
             }
             else    // Otherwise, reset the ball
             {
@@ -294,14 +309,13 @@ void Task_Breaker(void *pvParameters)
 
 /******************************************************************************
  * Helper method to reset the ball according to the current position of the
- * tank, the ball will be placed 1 pixel above the tank, centered at
- * the same x axis, respectively.
+ * tank, the ball will have the same center as the tank, respectively.
  ******************************************************************************/
 void ball_reset(void)
 {
     xSemaphoreTake(Sem_LCD, portMAX_DELAY);
 
-    LAUNCHED = false;       // Reset the flag
+    ball_launched = false;       // Reset the flag
 
     // Clear the previous image of the ball
     lcd_draw_image(
@@ -314,20 +328,75 @@ void ball_reset(void)
             LCD_COLOR_BLACK
     );
 
+    xSemaphoreGive(Sem_LCD);
+
+    tank_recover();
+
     // Update the position of the ball according to the tank
     ball_x = tank_x;
-    ball_y = tank_y - 12;
+    ball_y = tank_y;
+}
 
-    // Redraw the ball
-    lcd_draw_image(
-            ball_x,
-            ball_y,
-            ballWidthPixels,
-            ballHeightPixels,
-            image_ball,
-            ball_lcd_color,
-            LCD_COLOR_BLACK
-    );
+void tank_recover()
+{
+    xSemaphoreTake(Sem_LCD, portMAX_DELAY);
+
+    // Redraw the tank at its current position
+    switch(tank_dir)
+    {
+        case 0:
+        {
+            lcd_draw_image(
+                    tank_x,
+                    tank_y,
+                    tankWidthPixels,
+                    tankHeightPixels,
+                    tank_leftBitmaps,
+                    ball_lcd_color,
+                    LCD_COLOR_BLACK
+            );
+            break;
+        }
+        case 1:
+        {
+            lcd_draw_image(
+                    tank_x,
+                    tank_y,
+                    tankWidthPixels,
+                    tankHeightPixels,
+                    tank_rightBitmaps,
+                    ball_lcd_color,
+                    LCD_COLOR_BLACK
+            );
+            break;
+        }
+        case 2:
+        {
+            lcd_draw_image(
+                    tank_x,
+                    tank_y,
+                    tankWidthPixels,
+                    tankHeightPixels,
+                    tank_upBitmaps,
+                    ball_lcd_color,
+                    LCD_COLOR_BLACK
+            );
+            break;
+        }
+        case 3:
+        {
+            lcd_draw_image(
+                    tank_x,
+                    tank_y,
+                    tankWidthPixels,
+                    tankHeightPixels,
+                    tank_downBitmaps,
+                    ball_lcd_color,
+                    LCD_COLOR_BLACK
+            );
+            break;
+        }
+    }
 
     xSemaphoreGive(Sem_LCD);
 }
