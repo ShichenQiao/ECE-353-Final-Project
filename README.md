@@ -38,3 +38,4 @@ The project will begin with a Main Page. Users will be able to select between tw
 6. Genreated font database, and functions to access it, see font_arial.h for details.
 7. Updated Accelerometer sensitivity for better user experience.
 8. Plans for next steps: Generate random obstacles while generating a new game to make y-direction movements more necessary. Change the zone that enemy squares can be generated. Enable ball launches in 4 diections instead of just one direction (up).
+9. Updated project name, updated code to version: Breaker 2.0
