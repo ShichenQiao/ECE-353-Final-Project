@@ -23,3 +23,8 @@ The project will begin with a Main Page. Users will be able to select between tw
 1. Uploaded prototype 1.0
 2. Started README file
 3. Talked to TAs and Prof, get the following advices: improve usage of Queue, make usage of Accelerometer more extensive, increase complexity (mult layers, recursions, different angles of launches, show score and time on board, shake to change color, and so on).
+
+**Apr 13, 2021 (J.Q.)**
+1. Generated data info for arial font.
+2. Generated tank_front, tank_left, tank_right(may replace the airplane).
+3. Note: to make y-directional movements necessary, try making "airplane" smaller, then adding random obstacles
