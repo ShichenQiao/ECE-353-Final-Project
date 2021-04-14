@@ -67,31 +67,31 @@ void Task_Accelerometer_Bottom_Half(void *pvParameters)
         // Wait until waken by Top Half
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
-        // Send proper message to Queue_Airplane_Fight according to Accelerometer readings
+        // Send proper message to Queue_Breaker according to Accelerometer readings
         if(ACCELEROMETER_X_DIR < VOLT_1P50)      // Go Left
         {
             command = BAR_CMD_LEFT;
-            xQueueSend(Queue_Airplane_Fight, &command, portMAX_DELAY);
+            xQueueSend(Queue_Breaker, &command, portMAX_DELAY);
         }
         else if(ACCELEROMETER_X_DIR > VOLT_1P70)     // Go Right
         {
             command = BAR_CMD_RIGHT;
-            xQueueSend(Queue_Airplane_Fight, &command, portMAX_DELAY);
+            xQueueSend(Queue_Breaker, &command, portMAX_DELAY);
         }
-        else if(ACCELEROMETER_Y_DIR < VOLT_1P50)     // Go Down
+        else if(ACCELEROMETER_Y_DIR < VOLT_1P20)     // Go Down
         {
             command = BAR_CMD_DOWN;
-            xQueueSend(Queue_Airplane_Fight, &command, portMAX_DELAY);
+            xQueueSend(Queue_Breaker, &command, portMAX_DELAY);
         }
-        else if(ACCELEROMETER_Y_DIR > VOLT_1P70)     // Go Up
+        else if(ACCELEROMETER_Y_DIR > VOLT_1P40)     // Go Up
         {
             command = BAR_CMD_UP;
-            xQueueSend(Queue_Airplane_Fight, &command, portMAX_DELAY);
+            xQueueSend(Queue_Breaker, &command, portMAX_DELAY);
         }
-        else        // No movements of the Airplane
+        else        // No movements of the tank
         {
             command = BAR_CMD_CENTER;
-            xQueueSend(Queue_Airplane_Fight, &command, portMAX_DELAY);
+            xQueueSend(Queue_Breaker, &command, portMAX_DELAY);
         }
     }
 }

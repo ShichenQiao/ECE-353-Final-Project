@@ -7,7 +7,7 @@
 
 #include <main.h>
 
-TaskHandle_t Task_Accelerometer_Timer_Handle;
+TaskHandle_t Task_Timer_Handle;
 
 // Flag variables
 volatile bool S1_PRESSED = false;
@@ -97,8 +97,10 @@ void Task_Timer(void *pvParameters)
             {
                 ball_color = (ball_color + 1) % 11;
                 ball_lcd_color = get_lcd_color(ball_color);
-                S2_PRESSED = false;
 
+                xSemaphoreTake(Sem_LCD, portMAX_DELAY);
+
+                // Change color of the ball
                 lcd_draw_image(
                         ball_x,
                         ball_y,
@@ -108,6 +110,67 @@ void Task_Timer(void *pvParameters)
                         ball_lcd_color,
                         LCD_COLOR_BLACK
                 );
+
+                // Change color of the tank
+                switch(tank_dir)
+                {
+                    case 0:
+                    {
+                        lcd_draw_image(
+                                tank_x,
+                                tank_y,
+                                tankWidthPixels,
+                                tankHeightPixels,
+                                tank_leftBitmaps,
+                                ball_lcd_color,
+                                LCD_COLOR_BLACK
+                        );
+                        break;
+                    }
+                    case 1:
+                    {
+                        lcd_draw_image(
+                                tank_x,
+                                tank_y,
+                                tankWidthPixels,
+                                tankHeightPixels,
+                                tank_rightBitmaps,
+                                ball_lcd_color,
+                                LCD_COLOR_BLACK
+                        );
+                        break;
+                    }
+                    case 2:
+                    {
+                        lcd_draw_image(
+                                tank_x,
+                                tank_y,
+                                tankWidthPixels,
+                                tankHeightPixels,
+                                tank_upBitmaps,
+                                ball_lcd_color,
+                                LCD_COLOR_BLACK
+                        );
+                        break;
+                    }
+                    case 3:
+                    {
+                        lcd_draw_image(
+                                tank_x,
+                                tank_y,
+                                tankWidthPixels,
+                                tankHeightPixels,
+                                tank_downBitmaps,
+                                ball_lcd_color,
+                                LCD_COLOR_BLACK
+                        );
+                        break;
+                    }
+                }
+
+                xSemaphoreGive(Sem_LCD);
+
+                S2_PRESSED = false;
             }
         }
 

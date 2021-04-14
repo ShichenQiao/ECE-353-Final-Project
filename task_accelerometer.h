@@ -10,6 +10,8 @@
 
 #include "main.h"
 
+#define VOLT_1P20  1489      // 1.20 /(3.3/4096)
+#define VOLT_1P40  1738      // 1.40 /(3.3/4096)
 #define VOLT_1P50  1862      // 1.50 /(3.3/4096)
 #define VOLT_1P70  2110      // 1.70 /(3.3/4096)
 

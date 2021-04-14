@@ -15,7 +15,7 @@ int main(void)
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
 
     // Hardware initializations
-    Task_Airplane_Fight_Init();
+    Task_Breaker_Init();
     Task_Accelerometer_Init();
     ece353_MKII_S1_Init();
     ece353_MKII_S2_Init();
@@ -27,18 +27,18 @@ int main(void)
     // Print welcome message
     printf("\n\r");
     printf("*********************************************\n\r");
-    printf("* Welcome to AirPlane Fight!\n\r");
+    printf("* Welcome to BREAKER!\n\r");
     printf("*********************************************\n\r");
     printf("\n\r");
 
     // Main gaming mode task
     xTaskCreate
-     (   Task_Airplane_Fight,
-         "Task_Airplane_Fight",
+     (   Task_Breaker,
+         "Task_Breaker",
          configMINIMAL_STACK_SIZE,
          NULL,
          1,
-         &Task_Airplane_Fight_Handle
+         &Task_Breaker_Handle
      );
 
     // Task that manage enemy square generations and breaks
@@ -51,6 +51,16 @@ int main(void)
          &Task_Enemy_Handle
      );
 
+    // Task that manage the score board
+    xTaskCreate
+     (   Task_Score_Board,
+         "Task_Score_Board",
+         configMINIMAL_STACK_SIZE,
+         NULL,
+         1,
+         &Task_Score_Board_Handle
+     );
+
     // Shared timer around all tasks
     xTaskCreate
     (   Task_Timer,
@@ -58,7 +68,7 @@ int main(void)
         configMINIMAL_STACK_SIZE,
         NULL,
         2,
-        &Task_Accelerometer_Timer_Handle
+        &Task_Timer_Handle
     );
 
     // Task to get data from ADC and pass commands to other tasks via queue

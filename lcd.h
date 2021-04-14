@@ -1,5 +1,5 @@
 /*
- * lcd.c
+ * lcd.h
  *
  *  Created on: Sep 11, 2020
  *      Author: Joe Krachey

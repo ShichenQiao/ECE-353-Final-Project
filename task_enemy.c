@@ -32,10 +32,10 @@ void Task_Enemy(void *pvParameters)
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
         // If the ball is in the area where an enemy square can be at
-        if(ball_y < 50)
+        if(ball_y < 70)
         {
             // Calculate indexes from coordinates
-            ball_r = ball_y / 10 - 1;
+            ball_r = ball_y / 10 - 3;
             ball_c = ball_x / 10 - 1;
 
             // Calculate coordinates of the edges of the ball
@@ -53,7 +53,9 @@ void Task_Enemy(void *pvParameters)
 
                     // Calculate coordinates from indexes
                     x = ball_c * 10 + 16;
-                    y = ball_r * 10 + 10;
+                    y = ball_r * 10 + 30;
+
+                    xSemaphoreTake(Sem_LCD, portMAX_DELAY);
 
                     // Clear the square
                     lcd_draw_rectangle(
@@ -63,6 +65,8 @@ void Task_Enemy(void *pvParameters)
                         10,
                         LCD_COLOR_BLACK
                     );
+
+                    xSemaphoreGive(Sem_LCD);
                 }
 
                 // Reset the ball no matter color matches or not
@@ -86,7 +90,9 @@ void Task_Enemy(void *pvParameters)
 
                         // Calculate coordinates from indexes
                         x = (ball_c) * 10 + 16;
-                        y = ball_r * 10 + 10;
+                        y = ball_r * 10 + 30;
+
+                        xSemaphoreTake(Sem_LCD, portMAX_DELAY);
 
                         // Clear the square
                         lcd_draw_rectangle(
@@ -96,6 +102,8 @@ void Task_Enemy(void *pvParameters)
                             10,
                             LCD_COLOR_BLACK
                         );
+
+                        xSemaphoreGive(Sem_LCD);
                     }
 
                     // Reset the ball no matter color matches or not
@@ -119,7 +127,7 @@ void Task_Enemy(void *pvParameters)
 
                 // Calculate coordinates from indexes
                 x = c * 10 + 16;
-                y = r * 10 + 10;
+                y = r * 10 + 30;
 
                 // Randomly generate a color for the new square
                 Color_t color = rand() % 11;
@@ -127,6 +135,9 @@ void Task_Enemy(void *pvParameters)
 
                 // Draw the new square
                 uint16_t lcd_color = get_lcd_color(color);
+
+                xSemaphoreTake(Sem_LCD, portMAX_DELAY);
+
                 lcd_draw_rectangle(
                     x,
                     y,
@@ -134,6 +145,8 @@ void Task_Enemy(void *pvParameters)
                     10,
                     lcd_color
                 );
+
+                xSemaphoreGive(Sem_LCD);
             }
         }
     }

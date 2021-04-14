@@ -10,7 +10,7 @@
 
 #include "main.h"
 
-extern TaskHandle_t Task_Accelerometer_Timer_Handle;
+extern TaskHandle_t Task_Timer_Handle;
 
 // task_timer is responsible for debouncing and reading inputs from S1 and S2 on MKII
 extern volatile bool S1_PRESSED;

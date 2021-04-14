@@ -25,15 +25,17 @@
 #include <lcd.h>
 
 /* Image data */
-#include <airplane.h>
 #include <ball.h>
+#include <font_arial.h>
+#include <tank.h>
 
 /* FreeRTOS Tasks */
-#include <task_airplane_fight.h>
 #include <task_timer.h>
 #include <task_accelerometer.h>
+#include <task_breaker.h>
 #include <task_enemy.h>
 #include <task_console.h>
+#include <task_score_board.h>
 
 
 #endif /* MAIN_H_ */

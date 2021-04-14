@@ -1,5 +1,5 @@
 /*
- * ball.c
+ * ball.h
  *
  *  Created on: Apr 10, 2021
  *      Author: Justin Qiao
