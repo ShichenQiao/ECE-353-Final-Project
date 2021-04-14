@@ -2,7 +2,7 @@
 Authorized users: Justin Qiao, Mark Xia, and ECE 353 staff members (if any). DO NOT SHARE TO ANYONE ELSE
 
 ****General Information****
-Project Name: Airplane Fight
+Project Name: Breaker
 Initiated Date: Apr 10, 2021
 Team Members: Justin Qiao, Mark Xia
 Professor Name: Younghyun Kim
