@@ -41,5 +41,6 @@ The project will begin with a Main Page. Users will be able to select between tw
 9. Changed the corrdinates of the ball when not launched to have the same center as the tank.
 10. Restricted the zone where the ball can be in (4 sides).
 11. Now, the tank have a larger zone it can moves in.
-12. Updated project name, updated code to version: Breaker 2.1
-13. Plans for next steps: Implement barrier matrix so that the tank and the ball will not overlap any enemy square, vise versa; generate random obstacles while generating a new game to make y-direction movements more necessary. 
+12. Changed square size from 10 by 10 to 12 by 12.
+13. Updated project name, updated code to version: Breaker 2.1
+14. Plans for next steps: Implement barrier matrix so that the tank and the ball will not overlap any enemy square, vise versa; generate random obstacles while generating a new game to make y-direction movements more necessary. 
