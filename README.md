@@ -56,3 +56,5 @@ The project will begin with a Main Page. Users will be able to select between tw
 4. IMPORTANT: Added new game rule: when a ball hit a square whose color does not match, the ball will be reset, and the square will get a new randomly generated color.
 5. Fixed edge condition: when a ball hit the edge of two squares next to each other, the ball will be reset, and the conditions of the two squares will be determined simultaneously so that there will not be any half-broken squares caused by this edge condition.
 6. Added buffer values when calculating indexes from coordinates. This solved the problem will ball may go across a mis-matched square on its top or left.
+7. Fixed bug that the tank can not change direction when it is blocked by a square.
+8. Updated and unified comments in all files.
