@@ -44,4 +44,7 @@ void Task_Enemy(void *pvParameters);
  ******************************************************************************/
 uint16_t get_lcd_color(Color_t color);
 
+// -1 for no collision, 0 for failed to break, 1 for broke square
+void check_squares(int xk_1, int yk_1, int xk_2, int yk_2);
+
 #endif /* TASK_ENEMY_H_ */
