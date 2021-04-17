@@ -44,3 +44,6 @@ The project will begin with a Main Page. Users will be able to select between tw
 12. Changed square size from 10 by 10 to 12 by 12.
 13. Updated project name, updated code to version: Breaker 2.1
 14. Plans for next steps: Implement barrier matrix so that the tank and the ball will not overlap any enemy square, vise versa; generate random obstacles while generating a new game to make y-direction movements more necessary. 
+
+**Apr 16, 2021 (J.Q.)**
+1. Uploaded Breaker 2.2, enabled four direction movements and launches. Still have problem with lcd/matrix race condition, and have problems with hitting an edge between two matched-color squares.
