@@ -7,8 +7,8 @@
  *  Student Name: Justin Qiao
  */
 
-#ifndef TASK_CONSOLE_H_
-#define TASK_CONSOLE_H_
+#ifndef __TASK_CONSOLE_H__
+#define __TASK_CONSOLE_H__
 
 #include <main.h>
 
@@ -26,4 +26,4 @@ extern SemaphoreHandle_t Sem_Console;
 void Task_Console_Init(void);
 
 
-#endif /* TASK_CONSOLE_H_ */
+#endif /* __TASK_CONSOLE_H__ */

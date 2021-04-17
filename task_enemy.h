@@ -5,8 +5,8 @@
  *      Author: Justin Qiao
  */
 
-#ifndef TASK_ENEMY_H_
-#define TASK_ENEMY_H_
+#ifndef __TASK_ENEMY_H__
+#define __TASK_ENEMY_H__
 
 #include <main.h>
 
@@ -26,8 +26,8 @@ typedef enum {
     BROWN
 } Color_t;
 
-// Shared information about the ball
-extern Color_t ball_color;
+// Shared information about the tank
+extern Color_t tank_color;
 
 typedef struct{
     Color_t color;
@@ -36,6 +36,7 @@ typedef struct{
 
 /******************************************************************************
  * This task manages the random generations and breaks of enemy squares.
+ * Each enemy square will have a Width = Height = 12.
  ******************************************************************************/
 void Task_Enemy(void *pvParameters);
 
@@ -44,7 +45,16 @@ void Task_Enemy(void *pvParameters);
  ******************************************************************************/
 uint16_t get_lcd_color(Color_t color);
 
-// -1 for no collision, 0 for failed to break, 1 for broke square
+/******************************************************************************
+ * Helper method to solve collision conditions between the ball and the squares.
+ * Two corners of the ball, as specified in Task_Enemy will be passed to this
+ * method as (xk_1, yk_1) followed by (xk_2, yk_2).
+ * This method will break any color-matched squares in a collision.
+ * This method will randomly re-color any color-mismatched squares in a collision.
+ * This method will also reset the ball if needed.
+ * This method will appear to be dealing with the two given squares simultaneously,
+ * and it does not matter if the given coordinate pairs belongs to the same square.
+ ******************************************************************************/
 void check_squares(int xk_1, int yk_1, int xk_2, int yk_2);
 
-#endif /* TASK_ENEMY_H_ */
+#endif /* __TASK_ENEMY_H__ */

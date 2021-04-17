@@ -10,8 +10,8 @@
  */
 #include <ball.h>
 
-// The out most rows and columns are NOT blank intentionally for precision.
-// Have to redraw it in background color to erase.
+// The out-most rows and columns are NOT leave blank intentionally for precision.
+// Have to redraw it in the background color to erase.
 const uint8_t image_ball[] =
 {
     0x1E, 0x00, //       ####

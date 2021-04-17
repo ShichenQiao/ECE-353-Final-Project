@@ -976,29 +976,41 @@ const uint16_t arial_8ptDescriptors[][2] =
 	{5, 703}, 		/* ~ */ 
 };
 
+/******************************************************************************
+ * Get the row index of a char c in arial_8ptDescriptors.
+ ******************************************************************************/
 int get_index(char c)
 {
     char start = '!';
     return (int) c - (int) start;
 }
 
+/******************************************************************************
+ * Get the width of a char c in Airal_8pt font.
+ ******************************************************************************/
 uint16_t get_width(char c)
 {
     int index = get_index(c);
     return arial_8ptDescriptors[index][0];
 }
 
+/******************************************************************************
+ * Get the offset of a char c in arial_8ptBitmaps[].
+ ******************************************************************************/
 uint16_t get_offset(char c)
 {
     int index = get_index(c);
     return arial_8ptDescriptors[index][1];
 }
 
+/******************************************************************************
+ * Get the height of a char c in Airal_8pt font.
+ ******************************************************************************/
 uint16_t get_height(char c)
 {
     int index = get_index(c);
     uint16_t height;
-    if(c == '~')
+    if(c == '~')        // This is a special because index can not be incremented in this case
         height = 2;
     else
         height = arial_8ptDescriptors[index + 1][1] - arial_8ptDescriptors[index][1];

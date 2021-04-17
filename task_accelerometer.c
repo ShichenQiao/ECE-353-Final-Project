@@ -9,25 +9,26 @@
 
 TaskHandle_t Task_Accelerometer_Handle;
 
+// These variables are restricted to this file
 volatile uint32_t ACCELEROMETER_X_DIR = 0;
 volatile uint32_t ACCELEROMETER_Y_DIR = 0;
 
 /******************************************************************************
 * Initialize hardware resources for the Accelerometer on MKII.
 * The X reading will be stored in MEM[0] and the Y reading will be stored in MEM[1].
-* The interrupt priority of the Accelerometer will be 2
+* The interrupt priority of the Accelerometer will be 2.
 ******************************************************************************/
 void Task_Accelerometer_Init(void)
 {
-    // Configure the X direction as an analog input pin.
+    // Configure the X direction as an analog input pin
     P6->SEL0 |= BIT1;
     P6->SEL1 |= BIT1;
 
-    // Configure the Y direction as an analog input pin.
+    // Configure the Y direction as an analog input pin
     P4->SEL0 |= BIT0;
     P4->SEL1 |= BIT0;
 
-    // Configure CTL0 to sample 16-times in pulsed sample mode.
+    // Configure CTL0 to sample 16-times in pulsed sample mode
     // This is a sequence of samples.
     ADC14->CTL0 = ADC14_CTL0_SHT0_2 | ADC14_CTL0_SHP | ADC14_CTL0_CONSEQ_1;
 
@@ -41,7 +42,7 @@ void Task_Accelerometer_Init(void)
     // This is the end of a sequence.
     ADC14->MCTL[1] |= ADC14_MCTLN_INCH_13 | ADC14_MCTLN_EOS;
 
-    // Enable interrupts AFTER a value is written into MEM[1].
+    // Enable interrupts AFTER a value is written into MEM[1]
     ADC14->IER0 |= ADC14_IER0_IE1 ;
 
     // Enable ADC Interrupt
@@ -56,7 +57,7 @@ void Task_Accelerometer_Init(void)
 }
 
 /******************************************************************************
-* Bottom Half Task. Examines the ADC data from the Accelerometer on the MKII
+* Bottom Half Task. Examines the ADC data from the Accelerometer on the MKII.
 ******************************************************************************/
 void Task_Accelerometer_Bottom_Half(void *pvParameters)
 {
@@ -110,7 +111,7 @@ void ADC14_IRQHandler(void)
     // Read the Y value of the Accelerometer
     ACCELEROMETER_Y_DIR = ADC14->MEM[1];
 
-    // Send a Task Notification to the Task_Joystick_Bottom_Half task
+    // Send a Task Notification to the Task_Accelerometer_Bottom_Half task
     vTaskNotifyGiveFromISR(
         Task_Accelerometer_Handle,
         &xHigherPriorityTaskWoken

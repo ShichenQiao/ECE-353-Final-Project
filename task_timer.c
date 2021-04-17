@@ -24,13 +24,13 @@ bool debounce_s1(void)
     // Shift the de-bounce variable to the left
     debounce_state = debounce_state << 1;
 
-    // If S1 is being pressed, set the LSBit of debounce_state to a 1;
+    // If S1 is being pressed, set the LSBit of debounce_state to a 1
     if(ece353_MKII_S1())
     {
         debounce_state |= 0x01;
     }
 
-    // If the de-bounce variable is equal to 0x7F, change the color of the tri-color LED.
+    // If the de-bounce variable is equal to 0x7F, return true
     if(debounce_state == 0x7F)
     {
         return true;
@@ -52,13 +52,13 @@ bool debounce_s2(void)
     // Shift the de-bounce variable to the left
     debounce_state = debounce_state << 1;
 
-    // If S1 is being pressed, set the LSBit of debounce_state to a 1;
+    // If S1 is being pressed, set the LSBit of debounce_state to a 1
     if(ece353_MKII_S2())
     {
         debounce_state |= 0x01;
     }
 
-    // If the de-bounce variable is equal to 0x7F, change the color of the tri-color LED.
+    // If the de-bounce variable is equal to 0x7F, return true
     if(debounce_state == 0x7F)
     {
         return true;
@@ -72,12 +72,17 @@ bool debounce_s2(void)
 
 /******************************************************************************
  * Shared timer between all tasks.
+ * Initiate an ADC14 conversion every 5mS.
+ * Check S1, and S2 states every 5mS.
+ * When S2 is pressed during a active game and the ball is not launched, change
+ * the color of the tank.
+ * Send GENERATE signal to task_enemy every 2 seconds.
  ******************************************************************************/
 void Task_Timer(void *pvParameters)
 {
-    static int counter = 0;
+    static int counter = 0;     // Used to count for 2 seconds (5mS * 400 = 2S)
 
-    // Timer goes 5mS per iteration
+    // Timer goes roughly 5mS per iteration
     while(1){
         // Start an ADC14 conversion every 5mS
         ADC14->CTL0 |= ADC14_CTL0_SC | ADC14_CTL0_ENC;
@@ -95,15 +100,16 @@ void Task_Timer(void *pvParameters)
             // If the ball is not launched when S2 is pressed, change color
             if(!ball_launched)
             {
-                ball_color = (ball_color + 1) % 11;
-                ball_lcd_color = get_lcd_color(ball_color);
+                // Intentionally mixed enum type and int to rotate between colors
+                tank_color = (tank_color + 1) % 11;
+                tank_lcd_color = get_lcd_color(tank_color);
 
                 xSemaphoreTake(Sem_LCD, portMAX_DELAY);
 
                 // Change color of the tank
                 switch(tank_dir)
                 {
-                    case 0:
+                    case 0:     // Facing Left
                     {
                         lcd_draw_image(
                                 tank_x,
@@ -111,12 +117,12 @@ void Task_Timer(void *pvParameters)
                                 tankWidthPixels,
                                 tankHeightPixels,
                                 tank_leftBitmaps,
-                                ball_lcd_color,
+                                tank_lcd_color,
                                 LCD_COLOR_BLACK
                         );
                         break;
                     }
-                    case 1:
+                    case 1:     // Facing Right
                     {
                         lcd_draw_image(
                                 tank_x,
@@ -124,12 +130,12 @@ void Task_Timer(void *pvParameters)
                                 tankWidthPixels,
                                 tankHeightPixels,
                                 tank_rightBitmaps,
-                                ball_lcd_color,
+                                tank_lcd_color,
                                 LCD_COLOR_BLACK
                         );
                         break;
                     }
-                    case 2:
+                    case 2:     // Facing Up
                     {
                         lcd_draw_image(
                                 tank_x,
@@ -137,12 +143,12 @@ void Task_Timer(void *pvParameters)
                                 tankWidthPixels,
                                 tankHeightPixels,
                                 tank_upBitmaps,
-                                ball_lcd_color,
+                                tank_lcd_color,
                                 LCD_COLOR_BLACK
                         );
                         break;
                     }
-                    case 3:
+                    case 3:     // Facing Down
                     {
                         lcd_draw_image(
                                 tank_x,
@@ -150,7 +156,7 @@ void Task_Timer(void *pvParameters)
                                 tankWidthPixels,
                                 tankHeightPixels,
                                 tank_downBitmaps,
-                                ball_lcd_color,
+                                tank_lcd_color,
                                 LCD_COLOR_BLACK
                         );
                         break;
@@ -159,18 +165,19 @@ void Task_Timer(void *pvParameters)
 
                 xSemaphoreGive(Sem_LCD);
 
+                // Reset S2 flag
                 S2_PRESSED = false;
             }
         }
 
-        // Generate an enemy square every 2 seconds
+        // Send a GENERATE signal to task_enemy every 2 seconds
         if(counter++ == 400)
         {
             GENERATE = true;
             counter = 0;
         }
 
-        // Wait for 5mS after each ADC Conversion
+        // Wait for 5mS after each iteration
         vTaskDelay(pdMS_TO_TICKS(5));
     }
 }

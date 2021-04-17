@@ -31,7 +31,7 @@ int main(void)
     printf("*********************************************\n\r");
     printf("\n\r");
 
-    // Main gaming mode task
+    // Main Gaming mode task
     xTaskCreate
      (   Task_Breaker,
          "Task_Breaker",

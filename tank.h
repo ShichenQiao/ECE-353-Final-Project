@@ -16,7 +16,8 @@ extern const uint8_t tank_downBitmaps[];
 extern const uint8_t tank_rightBitmaps[];
 extern const uint8_t tank_leftBitmaps[];
 
+// No matter in which direction, the width and height are fixed
 extern const uint8_t tankWidthPixels;
 extern const uint8_t tankHeightPixels;
 
-#endif
+#endif /* __TANK_H__ */

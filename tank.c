@@ -6,7 +6,7 @@
  */
 
 /* 
- *  Image data for tank
+ *  Image data for tank in 4 directions
  */
 #include <tank.h>
 

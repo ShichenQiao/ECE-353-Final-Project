@@ -5,8 +5,8 @@
  *      Author: Justin Qiao
  */
 
-#ifndef TASK_TIMER_H_
-#define TASK_TIMER_H_
+#ifndef __TASK_TIMER_H_
+#define __TASK_TIMER_H_
 
 #include "main.h"
 
@@ -21,8 +21,13 @@ extern volatile bool GENERATE;
 
 /******************************************************************************
  * Shared timer between all tasks.
+ * Initiate an ADC14 conversion every 5mS.
+ * Check S1, and S2 states every 5mS.
+ * When S2 is pressed during a active game and the ball is not launched, change
+ * the color of the tank.
+ * Send GENERATE signal to task_enemy every 2 seconds.
  ******************************************************************************/
 void Task_Timer(void *pvParameters);
 
 
-#endif /* TASK_TIMER_H_ */
+#endif /* __TASK_TIMER_H_ */

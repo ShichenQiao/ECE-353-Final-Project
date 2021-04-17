@@ -5,8 +5,8 @@
  *      Author: Justin Qiao
  */
 
-#ifndef TASK_ACCELEROMETER_H_
-#define TASK_ACCELEROMETER_H_
+#ifndef __TASK_ACCELEROMETER_H__
+#define __TASK_ACCELEROMETER_H__
 
 #include "main.h"
 
@@ -21,20 +21,13 @@ extern TaskHandle_t Task_Accelerometer_Handle;
 * MEM[0]. The Y direction should be configured to place the results in MEM[1].
 *
 * After BOTH analog signals have finished being converted, a SINGLE interrupt
-* should be generated.
-*
-* Parameters
-*      None
-* Returns
-*      None
+* will be generated.
 ******************************************************************************/
  void Task_Accelerometer_Init(void);
 
 /******************************************************************************
-* Examines the ADC data from the Accelerometer on the MKII
+* Examines the ADC data from the Accelerometer on the MKII.
 ******************************************************************************/
 void Task_Accelerometer_Bottom_Half(void *pvParameters);
 
-
-
-#endif /* TASK_ACCELEROMETER_H_ */
+#endif /* __TASK_ACCELEROMETER_H__ */

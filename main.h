@@ -5,8 +5,8 @@
  *      Author: Justin Qiao
  */
 
-#ifndef MAIN_H_
-#define MAIN_H_
+#ifndef __MAIN_H__
+#define __MAIN_H__
 
 #include "msp.h"
 #include "msp432p401r.h"
@@ -30,12 +30,12 @@
 #include <tank.h>
 
 /* FreeRTOS Tasks */
-#include <task_timer.h>
 #include <task_accelerometer.h>
 #include <task_breaker.h>
-#include <task_enemy.h>
 #include <task_console.h>
+#include <task_enemy.h>
 #include <task_score_board.h>
+#include <task_timer.h>
 
 
-#endif /* MAIN_H_ */
+#endif /* __MAIN_H__ */

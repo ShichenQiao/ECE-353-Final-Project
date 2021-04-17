@@ -16,28 +16,30 @@ SemaphoreHandle_t Sem_LCD;
 // Shared information about the ball
 uint8_t ball_x;
 uint8_t ball_y;
-Color_t ball_color;
-uint16_t ball_lcd_color;
 bool ball_launched = false;      // Flag variable, true if the ball has been launched
 int ball_dir = 2;   // 0 for LEFT, 1 for RIGHT, 2 for UP, and 3 for DOWN
 
 // Shared coordinates of the tank
 uint8_t tank_x;
 uint8_t tank_y;
+Color_t tank_color;
+uint16_t tank_lcd_color;
 int tank_dir = 2;   // 0 for LEFT, 1 for RIGHT, 2 for UP, and 3 for DOWN
 
 bool occupied[LCD_VERTICAL_MAX][LCD_HORIZONTAL_MAX];    // Matrix to record whether a pixel on the LCD is occupied
 
 /******************************************************************************
- * This function will initialize Queue_Breaker, initialize the LCD and initialize
- * Sem_LCD.
+ * This function will initialize Queue_Breaker, the LCD and Sem_LCD.
  ******************************************************************************/
 void Task_Breaker_Init(void)
 {
+    // Initialize Queue_Breaker
     Queue_Breaker = xQueueCreate(QUEUE_LEN, sizeof(BAR_CMD_t));
 
+    // Initialize LCD
     Crystalfontz128x128_Init();
 
+    // Initialize Sem_LCD
     Sem_LCD = xSemaphoreCreateBinary();
     xSemaphoreGive(Sem_LCD);
 }
@@ -58,14 +60,19 @@ void Task_Breaker(void *pvParameters)
     // Initialize position and color of the ball
     ball_x = tank_x;
     ball_y = tank_y;
-    ball_color = GREEN;
-    ball_lcd_color = get_lcd_color(ball_color);
+    tank_color = GREEN;
+    tank_lcd_color = get_lcd_color(tank_color);
 
     // Helper variables to recored previous position of the ball right before LCD updates
     uint8_t ball_prev_x;
     uint8_t ball_prev_y;
 
     int i, j;   // Loop variables
+
+    // Temp variables, store draw frame information of different images
+    // (x0, y0) is the left upper corner of an image
+    // (x0, y0) is the right lower corner of an image
+    int x0, x1, y0, y1;
 
     // Setup occupied matrix
     for(i = 0; i < LCD_VERTICAL_MAX; i++)
@@ -93,7 +100,7 @@ void Task_Breaker(void *pvParameters)
             tankWidthPixels,
             tankHeightPixels,
             tank_upBitmaps,
-            ball_lcd_color,
+            tank_lcd_color,
             LCD_COLOR_BLACK
     );
 
@@ -118,19 +125,20 @@ void Task_Breaker(void *pvParameters)
         // Notify Task_Enemy to start generating enemy squares
         xTaskNotifyGive(Task_Enemy_Handle);
 
+        // Notify Task_Score_Board to start counting scores
         xTaskNotifyGive(Task_Score_Board_Handle);
 
         // Wait indefinitely until a message is received
         xQueueReceive(Queue_Breaker, &message, portMAX_DELAY);
 
         // Get the current draw frame of the tank
-        int x0, x1, y0, y1;
         get_draw_frame(tank_x, tank_y, tankWidthPixels, tankHeightPixels, &x0, &x1, &y0, &y1);
 
-        // Examine the message received, move accordingly without passing boarders
+        // Examine the message received, move the tank accordingly without passing boarders or running into enemies
         switch(message){
             case BAR_CMD_LEFT:
             {
+                // Check Left boarder of the tank
                 for(i = y0; i < y1; i++)
                 {
                     if(occupied[i][x0 - 1])
@@ -139,30 +147,35 @@ void Task_Breaker(void *pvParameters)
                     }
                 }
 
+                // Update direction to Left
                 tank_dir = 0;
 
+                // If the tank is allowed to pass, go Left by 1 pixel
                 if(tank_update)
                 {
-                    tank_x--;        // Otherwise, go Left by 1 pixel
-
-                    xSemaphoreTake(Sem_LCD, portMAX_DELAY);
-
-                    lcd_draw_image(
-                            tank_x,
-                            tank_y,
-                            tankWidthPixels,
-                            tankHeightPixels,
-                            tank_leftBitmaps,
-                            ball_lcd_color,
-                            LCD_COLOR_BLACK
-                    );
-
-                    xSemaphoreGive(Sem_LCD);
+                    tank_x--;
                 }
+
+                // Update the tank
+                xSemaphoreTake(Sem_LCD, portMAX_DELAY);
+
+                lcd_draw_image(
+                        tank_x,
+                        tank_y,
+                        tankWidthPixels,
+                        tankHeightPixels,
+                        tank_leftBitmaps,
+                        tank_lcd_color,
+                        LCD_COLOR_BLACK
+                );
+
+                xSemaphoreGive(Sem_LCD);
+
                 break;
             }
             case BAR_CMD_RIGHT:
             {
+                // Check Right boarder of the tank
                 for(i = y0; i < y1; i++)
                 {
                     if(occupied[i][x1 + 1])
@@ -171,30 +184,35 @@ void Task_Breaker(void *pvParameters)
                     }
                 }
 
+                // Update direction to Right
                 tank_dir = 1;
 
+                // If the tank is allowed to pass, go Right by 1 pixel
                 if(tank_update)
                 {
-                    tank_x++;        // Otherwise, go Right by 1 pixel
-
-                    xSemaphoreTake(Sem_LCD, portMAX_DELAY);
-
-                    lcd_draw_image(
-                            tank_x,
-                            tank_y,
-                            tankWidthPixels,
-                            tankHeightPixels,
-                            tank_rightBitmaps,
-                            ball_lcd_color,
-                            LCD_COLOR_BLACK
-                    );
-
-                    xSemaphoreGive(Sem_LCD);
+                    tank_x++;
                 }
+
+                // Update the tank
+                xSemaphoreTake(Sem_LCD, portMAX_DELAY);
+
+                lcd_draw_image(
+                        tank_x,
+                        tank_y,
+                        tankWidthPixels,
+                        tankHeightPixels,
+                        tank_rightBitmaps,
+                        tank_lcd_color,
+                        LCD_COLOR_BLACK
+                );
+
+                xSemaphoreGive(Sem_LCD);
+
                 break;
             }
             case BAR_CMD_DOWN:
             {
+                // Check Down boarder of the tank
                 for(i = x0; i < x1; i++)
                 {
                     if(occupied[y1 + 1][i])
@@ -203,30 +221,35 @@ void Task_Breaker(void *pvParameters)
                     }
                 }
 
+                // Update direction to Down
                 tank_dir = 3;
 
+                // If the tank is allowed to pass, go Down by 1 pixel
                 if(tank_update)
                 {
-                    tank_y++;        // Otherwise, go Down by 1 pixel
-
-                    xSemaphoreTake(Sem_LCD, portMAX_DELAY);
-
-                    lcd_draw_image(
-                            tank_x,
-                            tank_y,
-                            tankWidthPixels,
-                            tankHeightPixels,
-                            tank_downBitmaps,
-                            ball_lcd_color,
-                            LCD_COLOR_BLACK
-                    );
-
-                    xSemaphoreGive(Sem_LCD);
+                    tank_y++;
                 }
+
+                // Update the tank
+                xSemaphoreTake(Sem_LCD, portMAX_DELAY);
+
+                lcd_draw_image(
+                        tank_x,
+                        tank_y,
+                        tankWidthPixels,
+                        tankHeightPixels,
+                        tank_downBitmaps,
+                        tank_lcd_color,
+                        LCD_COLOR_BLACK
+                );
+
+                xSemaphoreGive(Sem_LCD);
+
                 break;
             }
             case BAR_CMD_UP:
             {
+                // Check Up boarder of the tank
                 for(i = x0; i < x1; i++)
                 {
                     if(occupied[y0 - 1][i])
@@ -235,26 +258,30 @@ void Task_Breaker(void *pvParameters)
                     }
                 }
 
+                // Update direction to Up
                 tank_dir = 2;
 
+                // If the tank is allowed to pass, go Up by 1 pixel
                 if(tank_update)
                 {
-                    tank_y--;        // Otherwise, go Down by 1 pixel
-
-                    xSemaphoreTake(Sem_LCD, portMAX_DELAY);
-
-                    lcd_draw_image(
-                            tank_x,
-                            tank_y,
-                            tankWidthPixels,
-                            tankHeightPixels,
-                            tank_upBitmaps,
-                            ball_lcd_color,
-                            LCD_COLOR_BLACK
-                    );
-
-                    xSemaphoreGive(Sem_LCD);
+                    tank_y--;
                 }
+
+                // Update the tank
+                xSemaphoreTake(Sem_LCD, portMAX_DELAY);
+
+                lcd_draw_image(
+                        tank_x,
+                        tank_y,
+                        tankWidthPixels,
+                        tankHeightPixels,
+                        tank_upBitmaps,
+                        tank_lcd_color,
+                        LCD_COLOR_BLACK
+                );
+
+                xSemaphoreGive(Sem_LCD);
+
                 break;
             }
             case BAR_CMD_CENTER:        // Do not update the tank on LCD if the board is held horizontally
@@ -271,42 +298,42 @@ void Task_Breaker(void *pvParameters)
             ball_launched = true;
         }
 
-        // Recored the previous position of the ball for clearing before move
-        ball_prev_x = ball_x;
-        ball_prev_y = ball_y;
-
         if(!ball_launched)   // If the ball was not launched
         {
-            // Make the ball follow the tank's position, if it will be updated
+            // Make the ball follow the tank's position
             if(tank_update)
             {
                 ball_reset();
             }
         }
-        else
+        else        // If the ball is launched
         {
+            // Recored the previous position of the ball for clearing before move
+            ball_prev_x = ball_x;
+            ball_prev_y = ball_y;
+
             // If the ball is still in the range of the boarders, move it
             if(ball_y > 32 && ball_y < 125 && ball_x > 13 && ball_x < 119)
             {
                 // Attempt to move the ball twice as fast as the tank does
                 switch(ball_dir)
                 {
-                    case 0:
+                    case 0:     // Go Left
                     {
                         ball_x -= 2;
                         break;
                     }
-                    case 1:
+                    case 1:     // Go Right
                     {
                         ball_x += 2;
                         break;
                     }
-                    case 2:
+                    case 2:     // Go Up
                     {
                         ball_y -= 2;
                         break;
                     }
-                    case 3:
+                    case 3:     // Go Down
                     {
                         ball_y += 2;
                         break;
@@ -315,6 +342,7 @@ void Task_Breaker(void *pvParameters)
 
                 xSemaphoreTake(Sem_LCD, portMAX_DELAY);
 
+                // Clear previous ball's position
                 lcd_draw_image(
                         ball_prev_x,
                         ball_prev_y,
@@ -324,21 +352,23 @@ void Task_Breaker(void *pvParameters)
                         LCD_COLOR_BLACK,
                         LCD_COLOR_BLACK
                 );
+                // Re-draw the ball at its new position
                 lcd_draw_image(
                         ball_x,
                         ball_y,
                         ballWidthPixels,
                         ballHeightPixels,
                         image_ball,
-                        ball_lcd_color,
+                        tank_lcd_color,
                         LCD_COLOR_BLACK
                 );
 
                 xSemaphoreGive(Sem_LCD);
 
+                // Redraw the tank at its current position so that the ball will not cover the tank
                 tank_recover();
             }
-            else    // Otherwise, reset the ball
+            else    // If the ball is moving out of the boarder, reset it
             {
                 ball_reset();
             }
@@ -382,6 +412,10 @@ void ball_reset(void)
     ball_y = tank_y;
 }
 
+/******************************************************************************
+ * Helper method to redraw the tank at its current position so that the ball
+ * will not cover the tank.
+ ******************************************************************************/
 void tank_recover()
 {
     xSemaphoreTake(Sem_LCD, portMAX_DELAY);
@@ -389,7 +423,7 @@ void tank_recover()
     // Redraw the tank at its current position
     switch(tank_dir)
     {
-        case 0:
+        case 0:     // Facing Left
         {
             lcd_draw_image(
                     tank_x,
@@ -397,12 +431,12 @@ void tank_recover()
                     tankWidthPixels,
                     tankHeightPixels,
                     tank_leftBitmaps,
-                    ball_lcd_color,
+                    tank_lcd_color,
                     LCD_COLOR_BLACK
             );
             break;
         }
-        case 1:
+        case 1:     // Facing Right
         {
             lcd_draw_image(
                     tank_x,
@@ -410,12 +444,12 @@ void tank_recover()
                     tankWidthPixels,
                     tankHeightPixels,
                     tank_rightBitmaps,
-                    ball_lcd_color,
+                    tank_lcd_color,
                     LCD_COLOR_BLACK
             );
             break;
         }
-        case 2:
+        case 2:     // Facing Up
         {
             lcd_draw_image(
                     tank_x,
@@ -423,12 +457,12 @@ void tank_recover()
                     tankWidthPixels,
                     tankHeightPixels,
                     tank_upBitmaps,
-                    ball_lcd_color,
+                    tank_lcd_color,
                     LCD_COLOR_BLACK
             );
             break;
         }
-        case 3:
+        case 3:     // Facing Down
         {
             lcd_draw_image(
                     tank_x,
@@ -436,7 +470,7 @@ void tank_recover()
                     tankWidthPixels,
                     tankHeightPixels,
                     tank_downBitmaps,
-                    ball_lcd_color,
+                    tank_lcd_color,
                     LCD_COLOR_BLACK
             );
             break;
@@ -446,8 +480,15 @@ void tank_recover()
     xSemaphoreGive(Sem_LCD);
 }
 
+/******************************************************************************
+ * Helper method to get the LCD draw frame of a given image centered at a given
+ * coordinates (x, y).
+ * (x0, y0) will store the left upper corner of the image.
+ * (x0, y0) will store the right lower corner of the image.
+ ******************************************************************************/
 void get_draw_frame(int x, int y, int image_width_pixels, int image_height_pixels, int *x0, int *x1, int *y0, int *y1)
 {
+    // These calculations are the same as in lcd.c
     *x0 = x - (image_width_pixels/2);
     *x1 = x + (image_width_pixels/2);
     if( (image_width_pixels & 0x01) == 0x00)
