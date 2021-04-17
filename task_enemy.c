@@ -9,111 +9,34 @@
 
 TaskHandle_t Task_Enemy_Handle;
 
+Enemy_t enemies[8][9];     // Matrix stores information about all enemy squares
+
 /******************************************************************************
  * This task manages the random generations and breaks of enemy squares.
  * Each enemy square will have a Width = Height = 12
  ******************************************************************************/
 void Task_Enemy(void *pvParameters)
 {
-    Enemy_t enemies[8][9];     // Matrix stores information about all enemy squares
     int i, j;       // Loop variables
     int r, c;       // Temp variables, Row and Column indexes
     int x, y;       // Temp variables, X and Y coordinates
     int ball_r, ball_c;     // The row and column the ball is in, if any
-    int left, right;        // X coordinates of the left and right edges of the ball
 
     // Clear the matrix
     for(i = 0; i < 8; i++)
         for(j = 0; j < 9; j++)
             enemies[i][j].occupied = false;
 
+    // Setup random seed
+    srand(time(NULL));
+
     while(1)
     {
         // Wait until a game is started to manage enemy squares
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
-        // If the ball is in the area where an enemy square can be at
-        if(ball_y < 70)
-        {
-            // Calculate indexes from coordinates
-            ball_r = ball_y / 10 - 3;
-            ball_c = ball_x / 10 - 1;
-
-            // Calculate coordinates of the edges of the ball
-            left = ball_x - ballWidthPixels / 2 - 1;
-            right = ball_x + ballWidthPixels / 2 - 1;
-
-            // If the ball's upper bond's center reaches a square that is occupied
-            if(enemies[ball_r][ball_c].occupied)
-            {
-                // Clear the square if the color of the ball matches the color of the square
-                if(enemies[ball_r][ball_c].color == ball_color)
-                {
-                    // Reset flag
-                    enemies[ball_r][ball_c].occupied = false;
-
-                    // Calculate coordinates from indexes
-                    x = ball_c * 10 + 16;
-                    y = ball_r * 10 + 30;
-
-                    xSemaphoreTake(Sem_LCD, portMAX_DELAY);
-
-                    // Clear the square
-                    lcd_draw_rectangle(
-                        x,
-                        y,
-                        10,
-                        10,
-                        LCD_COLOR_BLACK
-                    );
-
-                    xSemaphoreGive(Sem_LCD);
-                }
-
-                // Reset the ball no matter color matches or not
-                ball_reset();
-            }
-            else{       // Otherwise, check the other square that the ball might be in
-                // Check whether the ball is also inside the square on the left or on the right
-                if(ball_c > left / 10 - 1)
-                    ball_c = left / 10 - 1;
-                else if(ball_c < right / 10 - 1)
-                    ball_c = right / 10 - 1;
-
-                // Repeat to examine a collision for the square we are interested in if its occupied
-                if(enemies[ball_r][ball_c].occupied)
-                {
-                    // Clear the square if the color of the ball matches the color of the square
-                    if(enemies[ball_r][ball_c].color == ball_color)
-                    {
-                        // Reset flag
-                        enemies[ball_r][ball_c].occupied = false;
-
-                        // Calculate coordinates from indexes
-                        x = (ball_c) * 10 + 16;
-                        y = ball_r * 10 + 30;
-
-                        xSemaphoreTake(Sem_LCD, portMAX_DELAY);
-
-                        // Clear the square
-                        lcd_draw_rectangle(
-                            x,
-                            y,
-                            10,
-                            10,
-                            LCD_COLOR_BLACK
-                        );
-
-                        xSemaphoreGive(Sem_LCD);
-                    }
-
-                    // Reset the ball no matter color matches or not
-                    ball_reset();
-                }
-
-            }
-        }
-        else if(GENERATE)       // Try to generate a new enemy square only when the ball is not in zone
+        // Try to generate a new enemy square
+        if(GENERATE)
         {
             GENERATE = false;       // Reset flag
 
@@ -148,8 +71,85 @@ void Task_Enemy(void *pvParameters)
                 );
 
                 xSemaphoreGive(Sem_LCD);
+
+                for(i = y - 6; i < y + 6; i++)
+                {
+                    for(j = x - 7; j < x + 5; j++)
+                    {
+                        occupied[i][j] = true;
+                    }
+                }
             }
         }
+
+        // Get the current draw frame of the ball
+        int x0, x1, y0, y1;
+        get_draw_frame(ball_x, ball_y, ballWidthPixels, ballHeightPixels, &x0, &x1, &y0, &y1);
+
+        // Calculate indexes from coordinates
+        ball_c = (ball_x - 16) / 12;
+        ball_r = (ball_y - 32) / 12;
+
+        switch(ball_dir)
+        {
+            case 0:
+            {
+                ball_c = (x0 - 16) / 12;
+                ball_r = (y0 - 32) / 12;
+                if(check_square(ball_r, ball_c) != 1)
+                {
+                    ball_c = (x0 - 16) / 12;
+                    ball_r = (y1 - 32) / 12;
+
+                    check_square(ball_r, ball_c);
+
+                }
+                break;
+            }
+            case 1:
+            {
+                ball_c = (x1 - 16) / 12;
+                ball_r = (y0 - 32) / 12;
+                if(check_square(ball_r, ball_c != 1))
+                {
+                    ball_c = (x1 - 16) / 12;
+                    ball_r = (y1 - 32) / 12;
+
+                    check_square(ball_r, ball_c);
+
+                }
+                break;
+            }
+            case 2:
+            {
+                ball_c = (x0 - 16) / 12;
+                ball_r = (y0 - 32) / 12;
+                if(check_square(ball_r, ball_c) != 1)
+                {
+                    ball_c = (x1 - 16) / 12;
+                    ball_r = (y0 - 32) / 12;
+
+                    check_square(ball_r, ball_c);
+
+                }
+                break;
+            }
+            case 3:
+            {
+                ball_c = (x0 - 16) / 12;
+                ball_r = (y1 - 32) / 12;
+                if(check_square(ball_r, ball_c) != 1)
+                {
+                    ball_c = (x1 - 16) / 12;
+                    ball_r = (y1 - 32) / 12;
+
+                    check_square(ball_r, ball_c);
+
+                }
+                break;
+            }
+        }
+
     }
 }
 
@@ -172,4 +172,55 @@ uint16_t get_lcd_color(Color_t color)
         case BROWN: return LCD_COLOR_BROWN;
         default: return 0;
     }
+}
+
+// -1 for no collision, 0 for failed to break, 1 for broke square
+int check_square(int ball_r, int ball_c)
+{
+    int x, y;
+    int i, j;
+    if(ball_launched && enemies[ball_r][ball_c].occupied)
+    {
+        // Clear the square if the color of the ball matches the color of the square
+        if(enemies[ball_r][ball_c].color == ball_color)
+        {
+            // Reset flag
+            enemies[ball_r][ball_c].occupied = false;
+
+            // Calculate coordinates from indexes
+            x = ball_c * 12 + 16;
+            y = ball_r * 12 + 32;
+
+            for(i = y - 6; i < y + 6; i++)
+            {
+                for(j = x - 7; j < x + 5; j++)
+                {
+                    occupied[i][j] = false;
+                }
+            }
+
+            xSemaphoreTake(Sem_LCD, portMAX_DELAY);
+
+            // Clear the square
+            lcd_draw_rectangle(
+                x,
+                y,
+                12,
+                12,
+                LCD_COLOR_BLACK
+            );
+
+            xSemaphoreGive(Sem_LCD);
+
+            // Reset the ball if color matches
+            ball_reset();
+
+            return 1;
+        }
+
+        ball_reset();
+
+        return 0;
+    }
+    return -1;
 }

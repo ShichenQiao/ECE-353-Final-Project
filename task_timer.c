@@ -163,8 +163,8 @@ void Task_Timer(void *pvParameters)
             }
         }
 
-        // Generate an enemy square every 2 second
-        if(counter++ == 400)
+        // Generate an enemy square every 5 second
+        if(counter++ == 1000)
         {
             GENERATE = true;
             counter = 0;

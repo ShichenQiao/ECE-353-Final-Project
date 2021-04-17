@@ -26,6 +26,8 @@ uint8_t tank_x;
 uint8_t tank_y;
 int tank_dir = 2;   // 0 for LEFT, 1 for RIGHT, 2 for UP, and 3 for DOWN
 
+bool occupied[LCD_VERTICAL_MAX][LCD_HORIZONTAL_MAX];    // Matrix to record whether a pixel on the LCD is occupied
+
 /******************************************************************************
  * This function will initialize Queue_Breaker, initialize the LCD and initialize
  * Sem_LCD.
@@ -62,6 +64,25 @@ void Task_Breaker(void *pvParameters)
     // Helper variables to recored previous position of the ball right before LCD updates
     uint8_t ball_prev_x;
     uint8_t ball_prev_y;
+
+    int i, j;   // Loop variables
+
+    // Setup occupied matrix
+    for(i = 0; i < LCD_VERTICAL_MAX; i++)
+    {
+        for(j = 0; j < LCD_HORIZONTAL_MAX; j++)
+        {
+            // Any pixel outside the battle field boarders are considered occupied
+            if(i < 25 || i > 129 || j < 7 || j > 124)
+            {
+                occupied[i][j] = true;
+            }
+            else
+            {
+                occupied[i][j] = false;
+            }
+        }
+    }
 
     xSemaphoreTake(Sem_LCD, portMAX_DELAY);
 
@@ -102,16 +123,25 @@ void Task_Breaker(void *pvParameters)
         // Wait indefinitely until a message is received
         xQueueReceive(Queue_Breaker, &message, portMAX_DELAY);
 
+        // Get the current draw frame of the tank
+        int x0, x1, y0, y1;
+        get_draw_frame(tank_x, tank_y, tankWidthPixels, tankHeightPixels, &x0, &x1, &y0, &y1);
+
         // Examine the message received, move accordingly without passing boarders
         switch(message){
             case BAR_CMD_LEFT:
             {
+                for(i = y0; i < y1; i++)
+                {
+                    if(occupied[i][x0 - 1])
+                    {
+                        tank_update = false;
+                    }
+                }
+
                 tank_dir = 0;
 
-                // If boarder is met, set flag and not move
-                if(tank_x - 1 < 7 + tankWidthPixels / 2)
-                    tank_update = false;
-                else
+                if(tank_update)
                 {
                     tank_x--;        // Otherwise, go Left by 1 pixel
 
@@ -133,12 +163,17 @@ void Task_Breaker(void *pvParameters)
             }
             case BAR_CMD_RIGHT:
             {
+                for(i = y0; i < y1; i++)
+                {
+                    if(occupied[i][x1 + 1])
+                    {
+                        tank_update = false;
+                    }
+                }
+
                 tank_dir = 1;
 
-                // If boarder is met, set flag and not move
-                if(tank_x + 1 > 123 - tankWidthPixels / 2)
-                    tank_update = false;
-                else
+                if(tank_update)
                 {
                     tank_x++;        // Otherwise, go Right by 1 pixel
 
@@ -160,12 +195,17 @@ void Task_Breaker(void *pvParameters)
             }
             case BAR_CMD_DOWN:
             {
+                for(i = x0; i < x1; i++)
+                {
+                    if(occupied[y1 + 1][i])
+                    {
+                        tank_update = false;
+                    }
+                }
+
                 tank_dir = 3;
 
-                // If boarder is met, set flag and not move
-                if(tank_y + 1 > 122)
-                    tank_update = false;
-                else
+                if(tank_update)
                 {
                     tank_y++;        // Otherwise, go Down by 1 pixel
 
@@ -187,12 +227,17 @@ void Task_Breaker(void *pvParameters)
             }
             case BAR_CMD_UP:
             {
+                for(i = x0; i < x1; i++)
+                {
+                    if(occupied[y0 - 1][i])
+                    {
+                        tank_update = false;
+                    }
+                }
+
                 tank_dir = 2;
 
-                // If boarder is met, set flag and not move
-                if(tank_y - 1 < 41)
-                    tank_update = false;
-                else
+                if(tank_update)
                 {
                     tank_y--;        // Otherwise, go Down by 1 pixel
 
@@ -399,5 +444,22 @@ void tank_recover()
     }
 
     xSemaphoreGive(Sem_LCD);
+}
+
+void get_draw_frame(int x, int y, int image_width_pixels, int image_height_pixels, int *x0, int *x1, int *y0, int *y1)
+{
+    *x0 = x - (image_width_pixels/2);
+    *x1 = x + (image_width_pixels/2);
+    if( (image_width_pixels & 0x01) == 0x00)
+    {
+      *x1--;
+    }
+
+    *y0 = y  - (image_height_pixels/2);
+    *y1 = y  + (image_height_pixels/2) ;
+    if( (image_height_pixels & 0x01) == 0x00)
+    {
+      *y1--;
+    }
 }
 

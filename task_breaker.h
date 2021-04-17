@@ -34,6 +34,8 @@ extern uint8_t tank_x;
 extern uint8_t tank_y;
 extern int tank_dir;   // 0 for LEFT, 1 for RIGHT, 2 for UP, and 3 for DOWN
 
+extern bool occupied[LCD_VERTICAL_MAX][LCD_HORIZONTAL_MAX];    // Matrix to record whether a pixel on the LCD is occupied
+
 /******************************************************************************
  * This function will initialize Queue_Breaker, initialize the LCD and initialize
  * Sem_LCD.
@@ -53,5 +55,7 @@ void Task_Breaker(void *pvParameters);
 void ball_reset(void);
 
 void tank_recover();
+
+void get_draw_frame(int x, int y, int image_width_pixels, int image_height_pixels, int *x0, int *x1, int *y0, int *y1);
 
 #endif /* TASK_BREAKER_H_ */
