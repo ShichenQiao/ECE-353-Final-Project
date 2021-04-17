@@ -11,11 +11,10 @@ Professor Name: Younghyun Kim
 The project will begin with a Main Page. Users will be able to select between two modes: Gaming and Setting. In the Gaming mode, the user needs to press S1 on MKII to start a new game. The airplane is controlled by the Accelerometer on MKII, and the user can move the board to move the airplane in the x or y directions accordingly. When a game is going on, pressing S1 will launch the ball from the airplane, pressing S2 will change the color of the ball if it is not launched. Enemy square will be randomly generated at the top section of the LCD screen. When the ball hit a square, if the color of the ball matches the color of the square, the square will be destroyed, the user gets scored, and then the ball will be reset. If the color does not match, or the ball is travelling beyond the top edge of the LCD screen, the ball will be reset directly.
 
 ****TODOs****
-1. (Mark) Implement buzzer and light sensor by Apr 16, midnight.
-2. (Justin) Improve usage of queue, semaphore on SPI, and show score and time of the side of Gaming mode by Apr 16, midnight.
+1. (Mark) Implement buzzer and light sensor by Apr 18, midnight.
+2. (Justin) Improve usage of queue, and show score and time of the top of Gaming mode by Apr 18, midnight.
 3. Implement main page.
 4. Implement Setting mode.
-5. Improve complexity
 
 ****Journals****
 
@@ -47,3 +46,13 @@ The project will begin with a Main Page. Users will be able to select between tw
 
 **Apr 16, 2021 (J.Q.)**
 1. Uploaded Breaker 2.2, enabled four direction movements and launches. Still have problem with lcd/matrix race condition, and have problems with hitting an edge between two matched-color squares.
+
+**Apr 17, 2021 (J.Q.)**
+1. Uploaded Breaker 2.5.
+2. Made sure that newly generated square will not overlaps the ball, nor the tank.
+3. Solved lcd/matrix race condition.
+4. IMPORTANT: Added new game rule: when a ball hit a square whose color does not match, the ball will be reset, and the square will get a new randomly generated color.
+5. When a ball hit on the edge between two squares, the ball will be reset and the condition of the two squares will be determined simultaneously
+4. IMPORTANT: Added new game rule: when a ball hit a square whose color does not match, the ball will be reset, and the square will get a new randomly generated color.
+5. Fixed edge condition: when a ball hit the edge of two squares next to each other, the ball will be reset, and the conditions of the two squares will be determined simultaneously so that there will not be any half-broken squares caused by this edge condition.
+6. Added buffer values when calculating indexes from coordinates. This solved the problem will ball may go across a mis-matched square on its top or left.
