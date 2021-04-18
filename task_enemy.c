@@ -202,7 +202,7 @@ void check_squares(int xk_1, int yk_1, int xk_2, int yk_2)
         square_x_2 = ball_c_2 * 12 + 16;
         square_y_2 = ball_r_2 * 12 + 32;
 
-        // Clear square_1 if the color of the ball matches the color of the square_1
+        // Break square_1 if the color of the ball matches the color of the square_1
         if(enemies[ball_r_1][ball_c_1].occupied && enemies[ball_r_1][ball_c_1].color == tank_color)
         {
             // Reset flag so that the same square will not be rechecked
@@ -222,9 +222,12 @@ void check_squares(int xk_1, int yk_1, int xk_2, int yk_2)
 
             // Set flag showing that square 1 is broken
             match_1 = true;
+
+            // Each time a square is destroyed, get 1 point
+            score++;
         }
 
-        // Clear square_2 if the color of the ball matches the color of the square_2
+        // Break square_2 if the color of the ball matches the color of the square_2
         if(enemies[ball_r_2][ball_c_2].occupied && enemies[ball_r_2][ball_c_2].color == tank_color)
         {
             // Reset flag
@@ -244,6 +247,9 @@ void check_squares(int xk_1, int yk_1, int xk_2, int yk_2)
 
             // Set flag showing that square 2 is broken
             match_2 = true;
+
+            // Each time a square is destroyed, get 1 point
+            score++;
         }
 
         ball_reset();       // Reset the ball
@@ -315,5 +321,11 @@ void check_squares(int xk_1, int yk_1, int xk_2, int yk_2)
         }
 
         xSemaphoreGive(Sem_LCD);
+
+        if(match_1 || match_2)
+        {
+            // Update score board
+            update_score();
+        }
     }
 }

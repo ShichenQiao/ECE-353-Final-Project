@@ -9,6 +9,7 @@
 #define __TASK_ENEMY_H__
 
 #include <main.h>
+#include <time.h>
 
 extern TaskHandle_t Task_Enemy_Handle;
 

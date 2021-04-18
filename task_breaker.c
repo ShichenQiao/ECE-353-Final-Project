@@ -28,6 +28,8 @@ int tank_dir = 2;   // 0 for LEFT, 1 for RIGHT, 2 for UP, and 3 for DOWN
 
 bool occupied[LCD_VERTICAL_MAX][LCD_HORIZONTAL_MAX];    // Matrix to record whether a pixel on the LCD is occupied
 
+int score = 0;      // Keeps track of the score of a game
+
 /******************************************************************************
  * This function will initialize Queue_Breaker, the LCD and Sem_LCD.
  ******************************************************************************/
@@ -111,9 +113,18 @@ void Task_Breaker(void *pvParameters)
 
     xSemaphoreGive(Sem_LCD);
 
+    // Default game length: 120 seconds
+    time_left = 120;
+
+    // Reset score
+    score = 0;
+
     // What until S1 is pressed to start a game
     while(!S1_PRESSED){};
     S1_PRESSED = false;
+
+    // Notify Task_Score_Board to initialize with the given game length
+    xTaskNotifyGive(Task_Score_Board_Handle);
 
     // Enter the Gaming Mode
     while(1)
@@ -124,9 +135,6 @@ void Task_Breaker(void *pvParameters)
 
         // Notify Task_Enemy to start generating enemy squares
         xTaskNotifyGive(Task_Enemy_Handle);
-
-        // Notify Task_Score_Board to start counting scores
-        xTaskNotifyGive(Task_Score_Board_Handle);
 
         // Wait indefinitely until a message is received
         xQueueReceive(Queue_Breaker, &message, portMAX_DELAY);

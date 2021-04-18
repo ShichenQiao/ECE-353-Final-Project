@@ -9,36 +9,80 @@
 
 TaskHandle_t Task_Score_Board_Handle;
 
+int time_left = 0;      // The time left in an ongoing game
+
 /******************************************************************************
  * This task manages the score board in Gaming mode
  ******************************************************************************/
 void Task_Score_Board(void *pvParameters)
 {
+    char a, b, c;
+
+    lcd_print_char(15, 10, 'H');
+    lcd_print_char(20, 10, 'I');
+    lcd_print_char(24, 10, 'T');
+    lcd_print_char(30, 10, ':');
+
+    lcd_print_char(70, 10, 'T');
+    lcd_print_char(74, 10, 'I');
+    lcd_print_char(80, 10, 'M');
+    lcd_print_char(87, 10, 'E');
+    lcd_print_char(94, 10, ':');
+
+    update_score();
+
+    int_to_three_chars(time_left, &a, &b, &c);
+
+    xSemaphoreTake(Sem_LCD, portMAX_DELAY);
+
+    lcd_draw_rectangle(
+      110,
+      10,
+      30,
+      10,
+      LCD_COLOR_BLACK
+    );
+
+    xSemaphoreGive(Sem_LCD);
+
+    lcd_print_char(101, 10, a);
+    lcd_print_char(108, 10, b);
+    lcd_print_char(115, 10, c);
+
     while(1)
     {
         // Wait until a game is started to manage the score board
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
-        lcd_print_char(15, 10, 'H');
-        lcd_print_char(20, 10, 'I');
-        lcd_print_char(24, 10, 'T');
-        lcd_print_char(30, 10, ':');
+        while (time_left >= 0)
+        {
+            int_to_three_chars(time_left, &a, &b, &c);
 
-        lcd_print_char(37, 10, '0');
-        lcd_print_char(44, 10, '0');
-        lcd_print_char(51, 10, '0');
+            xSemaphoreTake(Sem_LCD, portMAX_DELAY);
 
-        lcd_print_char(70, 10, 'M');
-        lcd_print_char(75, 10, 'I');
-        lcd_print_char(80, 10, 'S');
-        lcd_print_char(87, 10, 'S');
-        lcd_print_char(94, 10, ':');
+            lcd_draw_rectangle(
+              110,
+              10,
+              30,
+              10,
+              LCD_COLOR_BLACK
+            );
 
-        lcd_print_char(101, 10, '0');
-        lcd_print_char(108, 10, '0');
-        lcd_print_char(115, 10, '0');
+            xSemaphoreGive(Sem_LCD);
 
-        vTaskDelay(pdMS_TO_TICKS(20));
+            lcd_print_char(101, 10, a);
+            lcd_print_char(108, 10, b);
+            lcd_print_char(115, 10, c);
+
+            time_left--;
+            vTaskDelay(pdMS_TO_TICKS(1000));
+        }
+
+        while(1)
+        {
+            // Freeze LCD
+            xSemaphoreTake(Sem_LCD, portMAX_DELAY);
+        }
     }
 }
 
@@ -64,4 +108,48 @@ void lcd_print_char(uint16_t x, uint16_t y, char c)
     );
 
     xSemaphoreGive(Sem_LCD);
+}
+
+/******************************************************************************
+ *
+ ******************************************************************************/
+void int_to_three_chars(int num, char *a, char *b, char *c)
+{
+    if(num >= 999)
+    {
+        *a = '9';
+        *b = '9';
+        *c = '9';
+        return;
+    }
+    int hundreds, tens, ones;
+    hundreds = num / 100;
+    tens = (num / 10) % 10;
+    ones = num % 10;
+
+    *a = hundreds + '0';
+    *b = tens + '0';
+    *c = ones + '0';
+}
+
+void update_score(){
+    char a, b, c;
+
+    int_to_three_chars(score, &a, &b, &c);
+
+    xSemaphoreTake(Sem_LCD, portMAX_DELAY);
+
+    lcd_draw_rectangle(
+      50,
+      10,
+      30,
+      10,
+      LCD_COLOR_BLACK
+    );
+
+    xSemaphoreGive(Sem_LCD);
+
+    lcd_print_char(37, 10, a);
+    lcd_print_char(44, 10, b);
+    lcd_print_char(51, 10, c);
 }

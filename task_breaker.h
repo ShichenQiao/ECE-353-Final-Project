@@ -36,6 +36,8 @@ extern int tank_dir;   // 0 for LEFT, 1 for RIGHT, 2 for UP, and 3 for DOWN
 
 extern bool occupied[LCD_VERTICAL_MAX][LCD_HORIZONTAL_MAX];    // Matrix to record whether a pixel on the LCD is occupied
 
+extern int score;      // Keeps track of the score of a game
+
 /******************************************************************************
  * This function will initialize Queue_Breaker, the LCD and Sem_LCD.
  ******************************************************************************/
