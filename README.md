@@ -57,3 +57,6 @@ The project will begin with a Main Page. Users will be able to select between tw
 7. Added buffer values when calculating indexes from coordinates. This solved the problem will ball may go across a mis-matched square on its top or left.
 8. Fixed bug that the tank can not change direction when it is blocked by a square.
 9. Updated and unified comments in all files.
+
+**Apr 18, 2021 (J.Q.)**
+1. Implemented timer and score counters on the score board.
