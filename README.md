@@ -31,18 +31,18 @@ The project will begin with a Main Page. Users will be able to select between tw
 **Apr 14, 2021 (J.Q.)**
 1. Generated image data for the thank in for directions. Width = 20, Height = 15.
 2. Replaced the airplane by the tank.
-3. Add tank movenment Animation. Tank will change direction according to last non-center command. If a center command is received, no change in direction.
+3. Add tank movement Animation. Tank will change direction according to last non-center command. If a center command is received, no change in direction.
 4. Now the tank change color with the ball.
 5. Added score board section on top of the LCD.
-6. Genreated font database, and functions to access it, see font_arial.h for details.
+6. Generated font database, and functions to access it, see font_arial.h for details.
 7. Updated Accelerometer sensitivity for better user experience.
 8. Enabled launching ball in four directions, same as the direction that the tank is facing to when S1 is pressed.
-9. Changed the corrdinates of the ball when not launched to have the same center as the tank.
+9. Changed the coordinates of the ball when not launched to have the same center as the tank.
 10. Restricted the zone where the ball can be in (4 sides).
-11. Now, the tank have a larger zone it can moves in.
+11. Now, the tank has a larger zone it can moves in.
 12. Changed square size from 10 by 10 to 12 by 12.
 13. Updated project name, updated code to version: Breaker 2.1
-14. Plans for next steps: Implement barrier matrix so that the tank and the ball will not overlap any enemy square, vise versa; generate random obstacles while generating a new game to make y-direction movements more necessary. 
+14. Plans for next steps: Implement barrier matrix so that the tank and the ball will not overlap any enemy square, vice versa; generate random obstacles while generating a new game to make y-direction movements more necessary. 
 
 **Apr 16, 2021 (J.Q.)**
 1. Uploaded Breaker 2.2, enabled four direction movements and launches. Still have problem with lcd/matrix race condition, and have problems with hitting an edge between two matched-color squares.
@@ -52,9 +52,8 @@ The project will begin with a Main Page. Users will be able to select between tw
 2. Made sure that newly generated square will not overlaps the ball, nor the tank.
 3. Solved lcd/matrix race condition.
 4. IMPORTANT: Added new game rule: when a ball hit a square whose color does not match, the ball will be reset, and the square will get a new randomly generated color.
-5. When a ball hit on the edge between two squares, the ball will be reset and the condition of the two squares will be determined simultaneously
-4. IMPORTANT: Added new game rule: when a ball hit a square whose color does not match, the ball will be reset, and the square will get a new randomly generated color.
-5. Fixed edge condition: when a ball hit the edge of two squares next to each other, the ball will be reset, and the conditions of the two squares will be determined simultaneously so that there will not be any half-broken squares caused by this edge condition.
-6. Added buffer values when calculating indexes from coordinates. This solved the problem will ball may go across a mis-matched square on its top or left.
-7. Fixed bug that the tank can not change direction when it is blocked by a square.
-8. Updated and unified comments in all files.
+5. When a ball hit on the edge between two squares, the ball will be reset and the condition of the two squares will be determined simultaneously.
+6. Fixed edge condition: when a ball hit the edge of two squares next to each other, the ball will be reset, and the conditions of the two squares will be determined simultaneously so that there will not be any half-broken squares caused by this edge condition.
+7. Added buffer values when calculating indexes from coordinates. This solved the problem will ball may go across a mis-matched square on its top or left.
+8. Fixed bug that the tank can not change direction when it is blocked by a square.
+9. Updated and unified comments in all files.
