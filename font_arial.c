@@ -1015,5 +1015,9 @@ uint16_t get_height(char c)
     else
         height = arial_8ptDescriptors[index + 1][1] - arial_8ptDescriptors[index][1];
 
+    // Deal with special chars in this font: %, @, W, w
+    if(height == 16)
+        height = height / 2;
+
     return height;
 }

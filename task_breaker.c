@@ -158,9 +158,19 @@ void Task_Breaker(void *pvParameters)
         // Reset the game
         reset_game();
 
+        print_pre_game_message();
+
         // Wait until S1 is pressed to start a game
         while(!S1_PRESSED){};
         S1_PRESSED = false;
+
+        lcd_draw_rectangle(
+          67,
+          67,
+          84,
+          54,
+          LCD_COLOR_BLACK
+        );
 
         // Set flag showing a game is on going
         game_on_going = true;
@@ -540,6 +550,57 @@ void tank_recover()
     }
 
     xSemaphoreGive(Sem_LCD);
+}
+
+void print_pre_game_message()
+{
+    // Draw a box on the middle of the LCD to show pre game message
+    lcd_draw_rectangle(
+      67,
+      67,
+      84,
+      54,
+      LCD_COLOR_YELLOW
+    );
+    lcd_draw_rectangle(
+      67,
+      67,
+      80,
+      50,
+      LCD_COLOR_BLACK
+    );
+
+    // Print "WELCOME" to the top row of the box
+    lcd_print_char(42, 50, 'W');
+    lcd_print_char(52, 50, 'E');
+    lcd_print_char(60, 50, 'L');
+    lcd_print_char(68, 50, 'C');
+    lcd_print_char(76, 50, 'O');
+    lcd_print_char(84, 50, 'M');
+    lcd_print_char(92, 50, 'E');
+
+    // Print "[S1] BEGIN" to LCD
+    lcd_print_char(35, 73, '[');
+    lcd_print_char(43, 73, 'S');
+    lcd_print_char(51, 73, '1');
+    lcd_print_char(59, 73, ']');
+
+    lcd_print_char(69, 73, 'B');
+    lcd_print_char(77, 73, 'E');
+    lcd_print_char(85, 73, 'G');
+    lcd_print_char(93, 73, 'I');
+    lcd_print_char(100, 73, 'N');
+
+    // Print "[S2] HOME" to LCD
+    lcd_print_char(35, 85, '[');
+    lcd_print_char(43, 85, 'S');
+    lcd_print_char(51, 85, '2');
+    lcd_print_char(59, 85, ']');
+
+    lcd_print_char(69, 85, 'H');
+    lcd_print_char(77, 85, 'O');
+    lcd_print_char(85, 85, 'M');
+    lcd_print_char(93, 85, 'E');
 }
 
 /******************************************************************************
