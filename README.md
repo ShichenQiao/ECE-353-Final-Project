@@ -66,3 +66,8 @@ The project will begin with a Main Page. Users will be able to select between tw
 5. When the messgae appears, press S1 will reset the game, and press S1 again will start the game, just like the first round.
 6. Seperated software initializations from major task_*** functions to idependent reset functions for convinence.
 7. Problem left: Free up S2 when game is not ongoing.
+
+**Apr 19, 2021 (J.Q.)**
+1. Updated to Breaker 3.2
+2. Freed S2 for other use (go back to main page, maybe) when a game is not on going
+3. Finished up end game message. The score will be shown and buttons will be freeze for 5 seconds (count down time shown on LCD). After the pause, press S1 could reset the game
