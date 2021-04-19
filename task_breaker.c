@@ -158,6 +158,7 @@ void Task_Breaker(void *pvParameters)
         // Reset the game
         reset_game();
 
+        // Print pre-game message
         print_pre_game_message();
 
         // Wait until S1 is pressed to start a game
@@ -552,6 +553,9 @@ void tank_recover()
     xSemaphoreGive(Sem_LCD);
 }
 
+/******************************************************************************
+ * Helper method to print a pre-game message with instructions.
+ ******************************************************************************/
 void print_pre_game_message()
 {
     // Draw a box on the middle of the LCD to show pre game message

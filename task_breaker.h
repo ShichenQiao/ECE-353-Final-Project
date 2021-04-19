@@ -70,6 +70,11 @@ void ball_reset(void);
 void tank_recover();
 
 /******************************************************************************
+ * Helper method to print a pre-game message with instructions.
+ ******************************************************************************/
+void print_pre_game_message();
+
+/******************************************************************************
  * Helper method to print a message saying game over and show the score earned.
  * Instruction for how to proceed will also be printed after a 5 second pause
  * with count down on LCD.
