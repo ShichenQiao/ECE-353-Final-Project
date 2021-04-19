@@ -23,9 +23,9 @@ extern QueueHandle_t Queue_Breaker;
 extern SemaphoreHandle_t Sem_LCD;
 
 // Shared information about the ball
-extern bool ball_launched;
 extern uint8_t ball_x;
 extern uint8_t ball_y;
+extern bool ball_launched;      // Flag variable, true if the ball has been launched
 extern int ball_dir;   // 0 for LEFT, 1 for RIGHT, 2 for UP, and 3 for DOWN
 
 // Shared coordinates of the tank
@@ -37,11 +37,19 @@ extern int tank_dir;   // 0 for LEFT, 1 for RIGHT, 2 for UP, and 3 for DOWN
 extern bool occupied[LCD_VERTICAL_MAX][LCD_HORIZONTAL_MAX];    // Matrix to record whether a pixel on the LCD is occupied
 
 extern int score;      // Keeps track of the score of a game
+extern int time_left;      // The time left in an ongoing game
+extern bool game_on_going;        // True if a game is ongoing, false otherwise
 
 /******************************************************************************
  * This function will initialize Queue_Breaker, the LCD and Sem_LCD.
  ******************************************************************************/
 void Task_Breaker_Init(void);
+
+/******************************************************************************
+ * This function resets a Breaker game. All game parameters will be set to
+ * default, and the LCD will be redraw as its initial condition.
+ ******************************************************************************/
+void reset_game();
 
 /******************************************************************************
  * This is the main task controlling the gaming mode. Commands can be sent to

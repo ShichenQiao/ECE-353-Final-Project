@@ -36,6 +36,11 @@ typedef struct{
 } Enemy_t;
 
 /******************************************************************************
+ * This function resets the enemies. It will be called in reset_game().
+ ******************************************************************************/
+void enemy_reset();
+
+/******************************************************************************
  * This task manages the random generations and breaks of enemy squares.
  * Each enemy square will have a Width = Height = 12.
  ******************************************************************************/

@@ -12,6 +12,22 @@ TaskHandle_t Task_Enemy_Handle;
 Enemy_t enemies[8][9];     // Matrix stores information about all enemy squares, restricted to this file
 
 /******************************************************************************
+ * This function resets the enemies. It will be called in reset_game().
+ ******************************************************************************/
+void enemy_reset()
+{
+    int i, j;       // Loop variables
+
+    // Clear the matrix
+    for(i = 0; i < 8; i++)
+        for(j = 0; j < 9; j++)
+            enemies[i][j].occupied = false;
+
+    // Setup random seed
+    srand(time(NULL));
+}
+
+/******************************************************************************
  * This task manages the random generations and breaks of enemy squares.
  * Each enemy square will have a Width = Height = 12.
  ******************************************************************************/
@@ -28,14 +44,6 @@ void Task_Enemy(void *pvParameters)
     // (x0, y0) is the left upper corner of an image
     // (x0, y0) is the right lower corner of an image
     int x0, x1, y0, y1;
-
-    // Clear the matrix
-    for(i = 0; i < 8; i++)
-        for(j = 0; j < 9; j++)
-            enemies[i][j].occupied = false;
-
-    // Setup random seed
-    srand(time(NULL));
 
     while(1)
     {
