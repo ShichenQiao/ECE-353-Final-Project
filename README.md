@@ -12,7 +12,7 @@ The project will begin with a Main Page. Users will be able to select between tw
 
 ****TODOs****
 1. (Mark) Implement buzzer and light sensor by Apr 18, midnight.
-2. (Justin) Improve usage of queue, and show score and time of the top of Gaming mode by Apr 18, midnight.
+2. (Justin) Improve usage of queues.
 3. Implement main page.
 4. Implement Setting mode.
 
@@ -60,3 +60,9 @@ The project will begin with a Main Page. Users will be able to select between tw
 
 **Apr 18, 2021 (J.Q.)**
 1. Implemented timer and score counters on the score board.
+2. Uploader Breaker 3.1.
+3. Added count down timer to terminate a game after a specified amount of seconds, by default, 120 seconds.
+4. When a game ends, a message box will show up with scores and instructions. (This version only have the box, to be finished by tomorrow.)
+5. When the messgae appears, press S1 will reset the game, and press S1 again will start the game, just like the first round.
+6. Seperated software initializations from major task_*** functions to idependent reset functions for convinence.
+7. Problem left: Free up S2 when game is not ongoing.
