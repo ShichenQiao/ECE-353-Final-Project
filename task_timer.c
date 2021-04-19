@@ -97,8 +97,8 @@ void Task_Timer(void *pvParameters)
         if(!S1_PRESSED && debounce_s2())
         {
             S2_PRESSED = true;
-            // If the ball is not launched when S2 is pressed, change color
-            if(!ball_launched)
+            // If the ball is not launched during a game when S2 is pressed, change color
+            if(game_on_going && !ball_launched)
             {
                 // Intentionally mixed enum type and int to rotate between colors
                 tank_color = (tank_color + 1) % 11;

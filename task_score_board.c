@@ -103,6 +103,7 @@ void Task_Score_Board(void *pvParameters)
 
         // If the counter reaches 0, terminate the game
         game_on_going = false;
+
     }
 }
 

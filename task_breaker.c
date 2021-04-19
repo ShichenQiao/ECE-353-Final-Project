@@ -124,7 +124,7 @@ void reset_game()
     xSemaphoreGive(Sem_LCD);
 
     // Default game length: 120 seconds
-    time_left = 10;
+    time_left = 120;
 
     // Reset score
     score = 0;
@@ -434,6 +434,12 @@ void Task_Breaker(void *pvParameters)
         // When a game ends, display end game message with score earned
         print_end_game_message();
 
+//        // Delay 2 seconds to let user see the message
+//        vTaskDelay(pdMS_TO_TICKS(2000));
+//
+        // Make sure excess presses at the end of the game do not influence showing the result
+        S1_PRESSED = false;
+
         // Wait until S1 is pressed to reset the game
         while(!S1_PRESSED){};
         S1_PRESSED = false;
@@ -565,10 +571,12 @@ void get_draw_frame(int x, int y, int image_width_pixels, int image_height_pixel
 
 /******************************************************************************
  * Helper method to print a message saying game over and show the score earned.
- * Instruction for how to proceed will also be printed to the LCD for users.
+ * Instruction for how to proceed will also be printed after a 5 second pause
+ * with count down on LCD.
  ******************************************************************************/
 void print_end_game_message()
 {
+    // Draw a box on the middle of the LCD to show end game message
     lcd_draw_rectangle(
       67,
       67,
@@ -576,7 +584,6 @@ void print_end_game_message()
       54,
       LCD_COLOR_YELLOW
     );
-
     lcd_draw_rectangle(
       67,
       67,
@@ -584,5 +591,98 @@ void print_end_game_message()
       50,
       LCD_COLOR_BLACK
     );
+
+    // Print "GAME OVER!" to the top row of the box
+    lcd_print_char(35, 50, 'G');
+    lcd_print_char(43, 50, 'A');
+    lcd_print_char(51, 50, 'M');
+    lcd_print_char(59, 50, 'E');
+
+    lcd_print_char(69, 50, 'O');
+    lcd_print_char(77, 50, 'V');
+    lcd_print_char(85, 50, 'E');
+    lcd_print_char(93, 50, 'R');
+    lcd_print_char(100, 50, '!');
+
+    // Print "SCORE:" right below the "GAME OVER!"
+    lcd_print_char(35, 60, 'S');
+    lcd_print_char(43, 60, 'C');
+    lcd_print_char(51, 60, 'O');
+    lcd_print_char(59, 60, 'R');
+    lcd_print_char(67, 60, 'E');
+    lcd_print_char(72, 60, ':');
+
+    char a, b, c;       // Used to store parsed digits in chars
+
+    // Parse the current score
+    int_to_three_chars(score, &a, &b, &c);
+
+    // Print score to the right of "SCORE:"
+    lcd_print_char(80, 60, a);
+    lcd_print_char(87, 60, b);
+    lcd_print_char(94, 60, c);
+
+    // Pause 5 seconds with a counter down shown on LCD
+    int pause = 5;
+    while(pause > 0)
+    {
+        // Print "PAUSE:" at the bottom row of the box
+        lcd_print_char(40, 85, 'P');
+        lcd_print_char(48, 85, 'A');
+        lcd_print_char(56, 85, 'U');
+        lcd_print_char(64, 85, 'S');
+        lcd_print_char(72, 85, 'E');
+        lcd_print_char(77, 85, ':');
+
+        // Cover original count
+        lcd_draw_rectangle(
+          90,
+          85,
+          10,
+          10,
+          LCD_COLOR_BLACK
+        );
+
+        // Print the count down
+        lcd_print_char(90, 85, pause + '0');
+
+        // Count down by 1 second
+        pause--;
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+
+    // Cover pause count down section with background color
+    lcd_draw_rectangle(
+      67,
+      85,
+      80,
+      10,
+      LCD_COLOR_BLACK
+    );
+
+    // Print "[S1] RESET" to LCD
+    lcd_print_char(35, 73, '[');
+    lcd_print_char(43, 73, 'S');
+    lcd_print_char(51, 73, '1');
+    lcd_print_char(59, 73, ']');
+
+    lcd_print_char(69, 73, 'R');
+    lcd_print_char(77, 73, 'E');
+    lcd_print_char(85, 73, 'S');
+    lcd_print_char(93, 73, 'E');
+    lcd_print_char(100, 73, 'T');
+
+    // Print "[S2] HOME" to LCD
+    lcd_print_char(35, 85, '[');
+    lcd_print_char(43, 85, 'S');
+    lcd_print_char(51, 85, '2');
+    lcd_print_char(59, 85, ']');
+
+    lcd_print_char(69, 85, 'H');
+    lcd_print_char(77, 85, 'O');
+    lcd_print_char(85, 85, 'M');
+    lcd_print_char(93, 85, 'E');
+
+
 
 }

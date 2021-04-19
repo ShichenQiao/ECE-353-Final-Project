@@ -77,4 +77,11 @@ void tank_recover();
  ******************************************************************************/
 void get_draw_frame(int x, int y, int image_width_pixels, int image_height_pixels, int *x0, int *x1, int *y0, int *y1);
 
+/******************************************************************************
+ * Helper method to print a message saying game over and show the score earned.
+ * Instruction for how to proceed will also be printed after a 5 second pause
+ * with count down on LCD.
+ ******************************************************************************/
+void print_end_game_message();
+
 #endif /* __TASK_BREAKER_H__ */
