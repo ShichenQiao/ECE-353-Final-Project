@@ -129,4 +129,17 @@ void lcd_draw_image(
   uint16_t bColor
 );
 
+/******************************************************************************
+ * Helper method to print char c in arial on the LCD screen, centered at (x, y).
+ ******************************************************************************/
+void lcd_print_char(uint16_t x, uint16_t y, char c);
+
+/******************************************************************************
+ * Helper method to get the LCD draw frame of a given image centered at a given
+ * coordinates (x, y).
+ * (x0, y0) will store the left upper corner of the image.
+ * (x0, y0) will store the right lower corner of the image.
+ ******************************************************************************/
+void lcd_get_draw_frame(int x, int y, int image_width_pixels, int image_height_pixels, int *x0, int *x1, int *y0, int *y1);
+
 #endif /* LCD_H_ */

@@ -20,6 +20,16 @@ extern volatile bool S2_PRESSED;
 extern volatile bool GENERATE;
 
 /******************************************************************************
+ * De-bounce switch S1 on MKII.
+ *****************************************************************************/
+bool debounce_s1(void);
+
+/******************************************************************************
+ * De-bounce switch S2 on MKII.
+ *****************************************************************************/
+bool debounce_s2(void);
+
+/******************************************************************************
  * Shared timer between all tasks.
  * Initiate an ADC14 conversion every 5mS.
  * Check S1, and S2 states every 5mS.

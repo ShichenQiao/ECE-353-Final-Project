@@ -7,7 +7,7 @@
  *  Student Name: Justin Qiao
  */
 
-#include "lcd.h"
+#include "main.h"
 
 /* ****************************************************************************
  * Used to configure the 5 pins that control the LCD interface on the MKII.
@@ -361,5 +361,54 @@ void lcd_draw_image(
 }
 
 
+/******************************************************************************
+ * Helper method to print char c in Arial on the LCD screen, centered at (x, y).
+ ******************************************************************************/
+void lcd_print_char(uint16_t x, uint16_t y, char c)
+{
+    // Get information about c from font_arial
+    uint16_t width = get_width(c);
+    uint16_t height = get_height(c);
+    uint16_t offset = get_offset(c);
+
+    xSemaphoreTake(Sem_LCD, portMAX_DELAY);
+
+    // Print c to specified position on LCD
+    lcd_draw_image(
+            x,
+            y,
+            width,
+            height,
+            arial_8ptBitmaps + offset,
+            LCD_COLOR_YELLOW,
+            LCD_COLOR_BLACK
+    );
+
+    xSemaphoreGive(Sem_LCD);
+}
+
+/******************************************************************************
+ * Helper method to get the LCD draw frame of a given image centered at a given
+ * coordinates (x, y).
+ * (x0, y0) will store the left upper corner of the image.
+ * (x0, y0) will store the right lower corner of the image.
+ ******************************************************************************/
+void lcd_get_draw_frame(int x, int y, int image_width_pixels, int image_height_pixels, int *x0, int *x1, int *y0, int *y1)
+{
+    // These calculations are the same as in lcd_draw_image()
+    *x0 = x - (image_width_pixels/2);
+    *x1 = x + (image_width_pixels/2);
+    if( (image_width_pixels & 0x01) == 0x00)
+    {
+      *x1--;
+    }
+
+    *y0 = y  - (image_height_pixels/2);
+    *y1 = y  + (image_height_pixels/2) ;
+    if( (image_height_pixels & 0x01) == 0x00)
+    {
+      *y1--;
+    }
+}
 
 

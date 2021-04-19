@@ -13,6 +13,7 @@
 
 extern TaskHandle_t Task_Enemy_Handle;
 
+// The enum enables using % when randomizing colors
 typedef enum {
     RED,
     GREEN,
@@ -30,6 +31,7 @@ typedef enum {
 // Shared information about the tank
 extern Color_t tank_color;
 
+// Each enemy square will have a color and a occupied flag
 typedef struct{
     Color_t color;
     bool occupied;

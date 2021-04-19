@@ -108,32 +108,6 @@ void Task_Score_Board(void *pvParameters)
 }
 
 /******************************************************************************
- * Helper method to print char c in Arial on the LCD screen, centered at (x, y).
- ******************************************************************************/
-void lcd_print_char(uint16_t x, uint16_t y, char c)
-{
-    // Get information about c from font_arial
-    uint16_t width = get_width(c);
-    uint16_t height = get_height(c);
-    uint16_t offset = get_offset(c);
-
-    xSemaphoreTake(Sem_LCD, portMAX_DELAY);
-
-    // Print c to specified position on LCD
-    lcd_draw_image(
-            x,
-            y,
-            width,
-            height,
-            arial_8ptBitmaps + offset,
-            LCD_COLOR_YELLOW,
-            LCD_COLOR_BLACK
-    );
-
-    xSemaphoreGive(Sem_LCD);
-}
-
-/******************************************************************************
  * Helper method to parse an int num into three digits as chars. The hundreds
  * place will be stored in *a, the tens place will be stored in *b, and the
  * ones place will be stored in *c.

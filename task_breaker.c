@@ -182,7 +182,7 @@ void Task_Breaker(void *pvParameters)
             xQueueReceive(Queue_Breaker, &message, portMAX_DELAY);
 
             // Get the current draw frame of the tank
-            get_draw_frame(tank_x, tank_y, tankWidthPixels, tankHeightPixels, &x0, &x1, &y0, &y1);
+            lcd_get_draw_frame(tank_x, tank_y, tankWidthPixels, tankHeightPixels, &x0, &x1, &y0, &y1);
 
             // Examine the message received, move the tank accordingly without passing boarders or running into enemies
             switch(message){
@@ -434,9 +434,6 @@ void Task_Breaker(void *pvParameters)
         // When a game ends, display end game message with score earned
         print_end_game_message();
 
-//        // Delay 2 seconds to let user see the message
-//        vTaskDelay(pdMS_TO_TICKS(2000));
-//
         // Make sure excess presses at the end of the game do not influence showing the result
         S1_PRESSED = false;
 
@@ -543,30 +540,6 @@ void tank_recover()
     }
 
     xSemaphoreGive(Sem_LCD);
-}
-
-/******************************************************************************
- * Helper method to get the LCD draw frame of a given image centered at a given
- * coordinates (x, y).
- * (x0, y0) will store the left upper corner of the image.
- * (x0, y0) will store the right lower corner of the image.
- ******************************************************************************/
-void get_draw_frame(int x, int y, int image_width_pixels, int image_height_pixels, int *x0, int *x1, int *y0, int *y1)
-{
-    // These calculations are the same as in lcd.c
-    *x0 = x - (image_width_pixels/2);
-    *x1 = x + (image_width_pixels/2);
-    if( (image_width_pixels & 0x01) == 0x00)
-    {
-      *x1--;
-    }
-
-    *y0 = y  - (image_height_pixels/2);
-    *y1 = y  + (image_height_pixels/2) ;
-    if( (image_height_pixels & 0x01) == 0x00)
-    {
-      *y1--;
-    }
 }
 
 /******************************************************************************

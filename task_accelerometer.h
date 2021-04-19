@@ -23,7 +23,7 @@ extern TaskHandle_t Task_Accelerometer_Handle;
 * After BOTH analog signals have finished being converted, a SINGLE interrupt
 * will be generated.
 ******************************************************************************/
- void Task_Accelerometer_Init(void);
+void Task_Accelerometer_Init(void);
 
 /******************************************************************************
 * Examines the ADC data from the Accelerometer on the MKII.

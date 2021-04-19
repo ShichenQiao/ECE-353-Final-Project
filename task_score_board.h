@@ -27,11 +27,6 @@ void score_board_reset();
 void Task_Score_Board(void *pvParameters);
 
 /******************************************************************************
- * Helper method to print char c in arial on the LCD screen, centered at (x, y).
- ******************************************************************************/
-void lcd_print_char(uint16_t x, uint16_t y, char c);
-
-/******************************************************************************
  * Helper method to parse an int num into three digits as chars. The hundreds
  * place will be stored in *a, the tens place will be stored in *b, and the
  * ones place will be stored in *c.
@@ -47,11 +42,5 @@ void int_to_three_chars(int num, char *a, char *b, char *c);
  * shown on LCD accordingly when called.
  ******************************************************************************/
 void update_score();
-
-/******************************************************************************
- * Helper method to print a message saying game over and show the score earned.
- * Instruction for how to proceed will also be printed to the LCD for users.
- ******************************************************************************/
-void print_end_game_message();
 
 #endif /* __TASK_SCORE_BOARD_H__ */

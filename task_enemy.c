@@ -85,7 +85,7 @@ void Task_Enemy(void *pvParameters)
                 uint16_t lcd_color = get_lcd_color(color);
 
                 // Get the current draw frame of the square being generated
-                get_draw_frame(x, y, 12, 12, &x0, &x1, &y0, &y1);
+                lcd_get_draw_frame(x, y, 12, 12, &x0, &x1, &y0, &y1);
 
                 // Update the occupied matrix defined in task_breaker
                 for(i = y0; i <= y1; i++)
@@ -112,7 +112,7 @@ void Task_Enemy(void *pvParameters)
         }
 
         // Get the current draw frame of the ball
-        get_draw_frame(ball_x, ball_y, ballWidthPixels, ballHeightPixels, &x0, &x1, &y0, &y1);
+        lcd_get_draw_frame(ball_x, ball_y, ballWidthPixels, ballHeightPixels, &x0, &x1, &y0, &y1);
 
         // Update the squares accordingly to the direction of the ball
         if(ball_launched)
@@ -217,7 +217,7 @@ void check_squares(int xk_1, int yk_1, int xk_2, int yk_2)
             enemies[ball_r_1][ball_c_1].occupied = false;
 
             // Get the current draw frame of the square being destroyed
-            get_draw_frame(square_x_1, square_y_1, 12, 12, &x0, &x1, &y0, &y1);
+            lcd_get_draw_frame(square_x_1, square_y_1, 12, 12, &x0, &x1, &y0, &y1);
 
             // Update the occupied matrix defined in task_breaker
             for(i = y0; i <= y1; i++)
@@ -242,7 +242,7 @@ void check_squares(int xk_1, int yk_1, int xk_2, int yk_2)
             enemies[ball_r_2][ball_c_2].occupied = false;
 
             // Get the current draw frame of the square being destroyed
-            get_draw_frame(square_x_2, square_y_2, 12, 12, &x0, &x1, &y0, &y1);
+            lcd_get_draw_frame(square_x_2, square_y_2, 12, 12, &x0, &x1, &y0, &y1);
 
             // Update the occupied matrix defined in task_breaker
             for(i = y0; i <= y1; i++)
