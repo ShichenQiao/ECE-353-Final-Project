@@ -68,6 +68,7 @@ The project will begin with a Main Page. Users will be able to select between tw
 7. Problem left: Free up S2 when game is not ongoing.
 
 **Apr 19, 2021 (J.Q.)**
-1. Updated to Breaker 3.2
+1. Updated to Breaker 3.3
 2. Freed S2 for other use (go back to main page, maybe) when a game is not on going
-3. Finished up end game message. The score will be shown and buttons will be freeze for 5 seconds (count down time shown on LCD). After the pause, press S1 could reset the game
+3. Finished up end game message. The score will be shown and buttons will be freeze for 5 seconds (count down time shown on LCD). After the pause, press S1 could reset the game.
+4. Reorganized lcd related code.
