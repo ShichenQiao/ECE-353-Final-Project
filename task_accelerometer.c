@@ -61,7 +61,7 @@ void Task_Accelerometer_Init(void)
 ******************************************************************************/
 void Task_Accelerometer_Bottom_Half(void *pvParameters)
 {
-    BAR_CMD_t command;     // Message prepared to be sent
+    TANK_CMD_t command;     // Message prepared to be sent
 
     while(1)
     {
@@ -71,27 +71,27 @@ void Task_Accelerometer_Bottom_Half(void *pvParameters)
         // Send proper message to Queue_Breaker according to Accelerometer readings
         if(ACCELEROMETER_X_DIR < VOLT_1P40)      // Go Left
         {
-            command = BAR_CMD_LEFT;
+            command = TANK_CMD_LEFT;
             xQueueSend(Queue_Breaker, &command, portMAX_DELAY);
         }
         else if(ACCELEROMETER_X_DIR > VOLT_1P80)     // Go Right
         {
-            command = BAR_CMD_RIGHT;
+            command = TANK_CMD_RIGHT;
             xQueueSend(Queue_Breaker, &command, portMAX_DELAY);
         }
         else if(ACCELEROMETER_Y_DIR < VOLT_1P40)     // Go Down
         {
-            command = BAR_CMD_DOWN;
+            command = TANK_CMD_DOWN;
             xQueueSend(Queue_Breaker, &command, portMAX_DELAY);
         }
         else if(ACCELEROMETER_Y_DIR > VOLT_1P80)     // Go Up
         {
-            command = BAR_CMD_UP;
+            command = TANK_CMD_UP;
             xQueueSend(Queue_Breaker, &command, portMAX_DELAY);
         }
         else        // No movements of the tank
         {
-            command = BAR_CMD_CENTER;
+            command = TANK_CMD_CENTER;
             // If there is no command from the console window, send BAR_CMD_CENTER
             if(RX_INDEX == 0)
                 xQueueSend(Queue_Breaker, &command, portMAX_DELAY);

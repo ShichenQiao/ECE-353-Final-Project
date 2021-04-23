@@ -10,14 +10,15 @@
 
 #include <main.h>
 
+// All possible commands to Queue_Breaker
 typedef enum {
-    BAR_CMD_LEFT,
-    BAR_CMD_RIGHT,
-    BAR_CMD_UP,
-    BAR_CMD_DOWN,
-    BAR_CMD_CENTER,
-    BAR_CMD_LAUNCH
-} BAR_CMD_t;
+    TANK_CMD_LEFT,
+    TANK_CMD_RIGHT,
+    TANK_CMD_UP,
+    TANK_CMD_DOWN,
+    TANK_CMD_CENTER,
+    TANK_CMD_LAUNCH
+} TANK_CMD_t;
 
 extern TaskHandle_t Task_Breaker_Handle;
 extern QueueHandle_t Queue_Breaker;

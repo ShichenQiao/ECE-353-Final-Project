@@ -125,7 +125,7 @@ void EUSCIA0_IRQHandler(void)
 ******************************************************************************/
 void Task_Console_Bottom_Half(void *pvParameters)
 {
-    BAR_CMD_t message;     // Message prepared to be sent
+    TANK_CMD_t message;     // Message prepared to be sent
     bool send_message = true;       // Send Message to Queue_Breaker only when this is true
 
     while(1)
@@ -141,55 +141,55 @@ void Task_Console_Bottom_Half(void *pvParameters)
                 case 'a':       // Go Left
                 {
                     send_message = true;
-                    message = BAR_CMD_LEFT;
+                    message = TANK_CMD_LEFT;
                     break;
                 }
                 case 'A':       // Go Left
                 {
                     send_message = true;
-                    message = BAR_CMD_LEFT;
+                    message = TANK_CMD_LEFT;
                     break;
                 }
                 case 'd':       // Go Right
                 {
                     send_message = true;
-                    message = BAR_CMD_RIGHT;
+                    message = TANK_CMD_RIGHT;
                     break;
                 }
                 case 'D':       // Go Right
                 {
                     send_message = true;
-                    message = BAR_CMD_RIGHT;
+                    message = TANK_CMD_RIGHT;
                     break;
                 }
                 case 's':       // Go Down
                 {
                     send_message = true;
-                    message = BAR_CMD_DOWN;
+                    message = TANK_CMD_DOWN;
                     break;
                 }
                 case 'S':       // Go Down
                 {
                     send_message = true;
-                    message = BAR_CMD_DOWN;
+                    message = TANK_CMD_DOWN;
                     break;
                 }
                 case 'w':       // Go Up
                 {
                     send_message = true;
-                    message = BAR_CMD_UP;
+                    message = TANK_CMD_UP;
                     break;
                 }
                 case 'W':       // Go Up
                 {
                     send_message = true;
-                    message = BAR_CMD_UP;
+                    message = TANK_CMD_UP;
                     break;
                 }
                 case ' ':       // Launch Ball
                 {
                     send_message = true;
-                    message = BAR_CMD_LAUNCH;
+                    message = TANK_CMD_LAUNCH;
                     break;
                 }
                 default:        // Any other command will result in no message being sent

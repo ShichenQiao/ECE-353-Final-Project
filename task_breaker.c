@@ -38,7 +38,7 @@ bool game_on_going = false;        // True if a game is ongoing, false otherwise
 void Task_Breaker_Init(void)
 {
     // Initialize Queue_Breaker
-    Queue_Breaker = xQueueCreate(QUEUE_LEN, sizeof(BAR_CMD_t));
+    Queue_Breaker = xQueueCreate(QUEUE_LEN, sizeof(TANK_CMD_t));
 
     // Initialize LCD
     Crystalfontz128x128_Init();
@@ -69,7 +69,7 @@ void reset_game()
 
     // Initialize position of the ball
     ball_x = 67;
-    ball_y = 123;
+    ball_y = 124;
 
     // Ball is not launched and facing Up by default
     ball_launched = false;
@@ -182,7 +182,7 @@ void Task_Breaker(void *pvParameters)
         // Enter the Gaming Mode
         while(game_on_going)
         {
-            BAR_CMD_t message;     // Message received from Queue_Breaker
+            TANK_CMD_t message;     // Message received from Queue_Breaker
 
             bool tank_update = true;     // Reset flag
 
@@ -197,7 +197,7 @@ void Task_Breaker(void *pvParameters)
 
             // Examine the message received, move the tank accordingly without passing boarders or running into enemies
             switch(message){
-                case BAR_CMD_LEFT:
+                case TANK_CMD_LEFT:
                 {
                     // Check Left boarder of the tank
                     for(i = y0; i < y1; i++)
@@ -234,7 +234,7 @@ void Task_Breaker(void *pvParameters)
 
                     break;
                 }
-                case BAR_CMD_RIGHT:
+                case TANK_CMD_RIGHT:
                 {
                     // Check Right boarder of the tank
                     for(i = y0; i < y1; i++)
@@ -271,7 +271,7 @@ void Task_Breaker(void *pvParameters)
 
                     break;
                 }
-                case BAR_CMD_DOWN:
+                case TANK_CMD_DOWN:
                 {
                     // Check Down boarder of the tank
                     for(i = x0; i < x1; i++)
@@ -308,7 +308,7 @@ void Task_Breaker(void *pvParameters)
 
                     break;
                 }
-                case BAR_CMD_UP:
+                case TANK_CMD_UP:
                 {
                     // Check Up boarder of the tank
                     for(i = x0; i < x1; i++)
@@ -345,12 +345,12 @@ void Task_Breaker(void *pvParameters)
 
                     break;
                 }
-                case BAR_CMD_CENTER:        // Do not update the tank on LCD if the board is held horizontally
+                case TANK_CMD_CENTER:        // Do not update the tank in this case
                 {
                     tank_update = false;
                     break;
                 }
-                case BAR_CMD_LAUNCH:
+                case TANK_CMD_LAUNCH:       // Launch the ball if it has not been launched
                 {
                     if(!ball_launched)
                     {
@@ -491,7 +491,7 @@ void ball_reset(void)
 
     // Update the position of the ball according to the tank
     ball_x = tank_x;
-    ball_y = tank_y;
+    ball_y = tank_y + 1;
 }
 
 /******************************************************************************
@@ -729,7 +729,5 @@ void print_end_game_message()
     lcd_print_char(77, 85, 'O');
     lcd_print_char(85, 85, 'M');
     lcd_print_char(93, 85, 'E');
-
-
 
 }
