@@ -7,7 +7,7 @@
 
 #include <main.h>
 
-#define QUEUE_LEN  2
+#define QUEUE_LEN  10
 
 TaskHandle_t Task_Breaker_Handle;
 QueueHandle_t Queue_Breaker;
@@ -348,6 +348,15 @@ void Task_Breaker(void *pvParameters)
                 case BAR_CMD_CENTER:        // Do not update the tank on LCD if the board is held horizontally
                 {
                     tank_update = false;
+                    break;
+                }
+                case BAR_CMD_LAUNCH:
+                {
+                    if(!ball_launched)
+                    {
+                        ball_dir = tank_dir;
+                        ball_launched = true;
+                    }
                     break;
                 }
             }

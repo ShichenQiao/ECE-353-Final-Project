@@ -15,7 +15,8 @@ typedef enum {
     BAR_CMD_RIGHT,
     BAR_CMD_UP,
     BAR_CMD_DOWN,
-    BAR_CMD_CENTER
+    BAR_CMD_CENTER,
+    BAR_CMD_LAUNCH
 } BAR_CMD_t;
 
 extern TaskHandle_t Task_Breaker_Handle;

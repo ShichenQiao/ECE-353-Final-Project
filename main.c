@@ -81,6 +81,16 @@ int main(void)
         &Task_Accelerometer_Handle
     );
 
+    // Task to get commands from console window
+    xTaskCreate
+     (   Task_Console_Bottom_Half,
+         "Task_Console_Bottom_Half",
+         configMINIMAL_STACK_SIZE,
+         NULL,
+         2,
+         &Task_Console_Handle
+     );
+
     /* Start the FreeRTOS scheduler */
     vTaskStartScheduler();
 

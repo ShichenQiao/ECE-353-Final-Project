@@ -1,15 +1,12 @@
 /*
  * task_console.c
  *
- *  Created on: Oct 21, 2020
- *      Author: Joe Krachey
- *
- *  Student Name: Justin Qiao
+ *  Created on: Apr 22, 2021
+ *      Author: Justin Qiao
  */
 
 #include <main.h>
 
-QueueHandle_t Queue_Console;
 TaskHandle_t Task_Console_Handle;
 SemaphoreHandle_t Sem_Console;
 
@@ -17,7 +14,7 @@ SemaphoreHandle_t Sem_Console;
 
 // Global variables used to store incoming data from RXBUF.
 volatile char RX_ARRAY[RX_ARRAY_SIZE];
-volatile uint16_t RX_INDEX=0;
+volatile uint16_t RX_INDEX = 0;
 
 /******************************************************************************
  * This function configures the eUSCI_A0 to be a UART that communicates at
@@ -96,4 +93,119 @@ int fputc(int c, FILE* stream)
     return 0;
 }
 
+//****************************************************************************
+// UART interrupt service routine
+// ****************************************************************************/
+void EUSCIA0_IRQHandler(void)
+{
+    char c;     // The character received from RXBUF
+    BaseType_t xHigherPriorityTaskWoken;
+
+    // Reading from the RXBUF automatically clears the Rx Interrupt
+    c = EUSCI_A0->RXBUF;
+
+    // Store character to RX_ARRAY
+    RX_ARRAY[RX_INDEX] = c;
+
+    // Once a character has been received, send a Task Notification to Task_Console_Bottom_Half
+    vTaskNotifyGiveFromISR(
+            Task_Console_Handle,
+            &xHigherPriorityTaskWoken
+    );
+
+    // Context switch, if needed
+    portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+
+    // Increase the index after a new character is stored
+    RX_INDEX++;
+}
+
+/******************************************************************************
+* Task used to send command from the console window to task_breaker.
+******************************************************************************/
+void Task_Console_Bottom_Half(void *pvParameters)
+{
+    BAR_CMD_t message;     // Message prepared to be sent
+    bool send_message = true;       // Send Message to Queue_Breaker only when this is true
+
+    while(1)
+    {
+        // Wait until waken by Top Half
+        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+
+        // Examine the console if a game is on going
+        if(game_on_going)
+        {
+            // Examine the command type (case insensitive)
+            switch(RX_ARRAY[0]){
+                case 'a':       // Go Left
+                {
+                    send_message = true;
+                    message = BAR_CMD_LEFT;
+                    break;
+                }
+                case 'A':       // Go Left
+                {
+                    send_message = true;
+                    message = BAR_CMD_LEFT;
+                    break;
+                }
+                case 'd':       // Go Right
+                {
+                    send_message = true;
+                    message = BAR_CMD_RIGHT;
+                    break;
+                }
+                case 'D':       // Go Right
+                {
+                    send_message = true;
+                    message = BAR_CMD_RIGHT;
+                    break;
+                }
+                case 's':       // Go Down
+                {
+                    send_message = true;
+                    message = BAR_CMD_DOWN;
+                    break;
+                }
+                case 'S':       // Go Down
+                {
+                    send_message = true;
+                    message = BAR_CMD_DOWN;
+                    break;
+                }
+                case 'w':       // Go Up
+                {
+                    send_message = true;
+                    message = BAR_CMD_UP;
+                    break;
+                }
+                case 'W':       // Go Up
+                {
+                    send_message = true;
+                    message = BAR_CMD_UP;
+                    break;
+                }
+                case ' ':       // Launch Ball
+                {
+                    send_message = true;
+                    message = BAR_CMD_LAUNCH;
+                    break;
+                }
+                default:        // Any other command will result in no message being sent
+                    send_message = false;
+            }
+
+            // If a message is ready to be sent, send it to Queue_Breaker
+            if(send_message)
+            {
+                xQueueSend(Queue_Breaker, &message, portMAX_DELAY);
+            }
+        }
+
+        // Reset RX_ARRAY and RX_INDEX
+        memset(RX_ARRAY, 0, RX_ARRAY_SIZE);
+        RX_INDEX = 0;
+    }
+}
 

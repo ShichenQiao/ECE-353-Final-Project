@@ -92,7 +92,9 @@ void Task_Accelerometer_Bottom_Half(void *pvParameters)
         else        // No movements of the tank
         {
             command = BAR_CMD_CENTER;
-            xQueueSend(Queue_Breaker, &command, portMAX_DELAY);
+            // If there is no command from the console window, send BAR_CMD_CENTER
+            if(RX_INDEX == 0)
+                xQueueSend(Queue_Breaker, &command, portMAX_DELAY);
         }
     }
 }
