@@ -75,7 +75,8 @@ The project will begin with a Main Page. Users will be able to select between tw
 6. Solved font bugs
 
 **Apr 23, 2021 (J.Q.)**
-1. Updated to Breaker 4.0
+1. Updated to Breaker 4.1
 2. Implemented console window commands (only when game_on_going == true): 'w', 'a', 's', 'd' (case insensitive) from console will move the tank by 1 pixel to up, left, down, and right if there is no commands from the accelerometer. The space character ' ' will launch the ball when possible.
-3. Bug detected: the ball can not be launched if the tank is at it up-most row (will be fixed in the next version).
-4. TODO: print messages (and directions) to the console while important events happens in the game.
+3. Added TANK_CMD_LAUNCH for launching the ball from console window to TANK_CMD_t.
+4. [FIXED] Bug detected: the ball can not be launched if the tank is at it up-most row (will be fixed in the next version).
+5. TODO: print messages (and directions) to the console while important events happens in the game.
