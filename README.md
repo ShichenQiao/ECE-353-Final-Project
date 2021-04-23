@@ -11,10 +11,9 @@ Professor Name: Younghyun Kim
 The project will begin with a Main Page. Users will be able to select between two modes: Gaming and Setting. In the Gaming mode, the user needs to press S1 on MKII to start a new game. The airplane is controlled by the Accelerometer on MKII, and the user can move the board to move the airplane in the x or y directions accordingly. When a game is going on, pressing S1 will launch the ball from the airplane, pressing S2 will change the color of the ball if it is not launched. Enemy square will be randomly generated at the top section of the LCD screen. When the ball hit a square, if the color of the ball matches the color of the square, the square will be destroyed, the user gets scored, and then the ball will be reset. If the color does not match, or the ball is travelling beyond the top edge of the LCD screen, the ball will be reset directly.
 
 ****TODOs****
-1. (Mark) Implement buzzer and light sensor by Apr 18, midnight.
-2. (Justin) Improve usage of queues.
-3. Implement main page.
-4. Implement Setting mode.
+1. (Mark) Implement buzzer and light sensor by Apr 23, midnight.
+2. Implement main page.
+3. Implement Setting mode.
 
 ****Journals****
 
@@ -74,3 +73,9 @@ The project will begin with a Main Page. Users will be able to select between tw
 4. Reorganized lcd related code.
 5. Added Pre-game message
 6. Solved font bugs
+
+**Apr 23, 2021 (J.Q.)**
+1. Updated to Breaker 4.0
+2. Implemented console window commands (only when game_on_going == true): 'w', 'a', 's', 'd' (case insensitive) from console will move the tank by 1 pixel to up, left, down, and right if there is no commands from the accelerometer. The space character ' ' will launch the ball when possible.
+3. Bug detected: the ball can not be launched if the tank is at it up-most row (will be fixed in the next version).
+4. TODO: print messages (and directions) to the console while important events happens in the game.
