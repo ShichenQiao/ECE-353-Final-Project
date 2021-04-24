@@ -42,7 +42,7 @@ void Task_Enemy(void *pvParameters)
 
     // Temp variables, store draw frame information of different images
     // (x0, y0) is the left upper corner of an image
-    // (x0, y0) is the right lower corner of an image
+    // (x1, y1) is the right lower corner of an image
     int x0, x1, y0, y1;
 
     while(1)
@@ -188,7 +188,7 @@ void check_squares(int xk_1, int yk_1, int xk_2, int yk_2)
 
     // Temp variables, store draw frame information of different images
     // (x0, y0) is the left upper corner of an image
-    // (x0, y0) is the right lower corner of an image
+    // (x1, y1) is the right lower corner of an image
     int x0, x1, y0, y1;
 
     // Flag variables, true when a square is broken, false otherwise

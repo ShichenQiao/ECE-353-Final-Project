@@ -150,7 +150,7 @@ void Task_Breaker(void *pvParameters)
 
     // Temp variables, store draw frame information of different images
     // (x0, y0) is the left upper corner of an image
-    // (x0, y0) is the right lower corner of an image
+    // (x1, y1) is the right lower corner of an image
     int x0, x1, y0, y1;
 
     while(1)
@@ -165,6 +165,7 @@ void Task_Breaker(void *pvParameters)
         while(!S1_PRESSED){};
         S1_PRESSED = false;
 
+        // Cover pre-game message
         lcd_draw_rectangle(
           67,
           67,
