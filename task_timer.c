@@ -93,6 +93,9 @@ void Task_Timer(void *pvParameters)
             S1_PRESSED = true;
         }
 
+        // Read in the lux value from opt3001
+        lux = opt3001_read_lux();
+
         // Debounce and set S2 state
         if(!S1_PRESSED && debounce_s2())
         {

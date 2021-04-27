@@ -36,7 +36,11 @@ extern uint8_t tank_y;
 extern uint16_t tank_lcd_color;
 extern int tank_dir;   // 0 for LEFT, 1 for RIGHT, 2 for UP, and 3 for DOWN
 
-extern bool occupied[LCD_VERTICAL_MAX][LCD_HORIZONTAL_MAX];    // Matrix to record whether a pixel on the LCD is occupied
+// Lux reading from the light sensor
+extern float lux;
+
+// Matrix to record whether a pixel on the LCD is occupied
+extern bool occupied[LCD_VERTICAL_MAX][LCD_HORIZONTAL_MAX];
 
 extern int score;      // Keeps track of the score of a game
 extern int time_left;      // The time left in an ongoing game

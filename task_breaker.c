@@ -19,6 +19,12 @@ uint8_t ball_y;
 bool ball_launched;      // Flag variable, true if the ball has been launched
 int ball_dir;   // 0 for LEFT, 1 for RIGHT, 2 for UP, and 3 for DOWN
 
+// Shared global variable that stores the lux number read from opt3001
+float lux = 0.0;
+
+// Back ground color black, true means background color is black false is white.
+bool bgc_black = true;
+
 // Shared coordinates of the tank
 uint8_t tank_x;
 uint8_t tank_y;
@@ -161,9 +167,12 @@ void Task_Breaker(void *pvParameters)
         // Print pre-game message
         print_pre_game_message();
 
-        // Wait until S1 is pressed to start a game
-        while(!S1_PRESSED){};
+        // Wait until S1 is pressed to start a game, play theme song when game is not started
+        while(!S1_PRESSED){
+            music_play_song_shine();
+        }
         S1_PRESSED = false;
+        ece353_MKII_Buzzer_Off();
 
         // Cover pre-game message
         lcd_draw_rectangle(
@@ -180,6 +189,9 @@ void Task_Breaker(void *pvParameters)
         // Notify Task_Score_Board to initialize with the given game length
         xTaskNotifyGive(Task_Score_Board_Handle);
 
+        // Indicate whether the shot ball music has been played.
+        bool shot_music = false;
+
         // Enter the Gaming Mode
         while(game_on_going)
         {
@@ -195,6 +207,9 @@ void Task_Breaker(void *pvParameters)
 
             // Get the current draw frame of the tank
             lcd_get_draw_frame(tank_x, tank_y, tankWidthPixels, tankHeightPixels, &x0, &x1, &y0, &y1);
+
+            // Set background color
+            set_bgc();
 
             // Examine the message received, move the tank accordingly without passing boarders or running into enemies
             switch(message){
@@ -376,12 +391,21 @@ void Task_Breaker(void *pvParameters)
                 {
                     ball_reset();
                 }
+
+                // If not launched, stop playing music
+                shot_music = false;
             }
             else        // If the ball is launched
             {
                 // Recored the previous position of the ball for clearing before move
                 ball_prev_x = ball_x;
                 ball_prev_y = ball_y;
+
+                if (!shot_music) {  // If not played the music before, play the shot music
+                    // Play hit sound effect
+                    music_play_shot();
+                    shot_music = true;
+                }
 
                 // If the ball is still in the range of the boarders, move it
                 if(ball_y > 32 && ball_y < 125 && ball_x > 13 && ball_x < 119)

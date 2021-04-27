@@ -22,6 +22,8 @@
 
 /* ECE353 Includes */
 #include <ece353.h>
+#include "opt3001.h"
+#include "i2c.h"
 #include <lcd.h>
 
 /* Image data */
@@ -36,6 +38,7 @@
 #include <task_enemy.h>
 #include <task_score_board.h>
 #include <task_timer.h>
+#include <task_buzzer.h>
 
 
 #endif /* __MAIN_H__ */

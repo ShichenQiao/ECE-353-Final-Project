@@ -19,7 +19,12 @@ int main(void)
     Task_Accelerometer_Init();
     ece353_MKII_S1_Init();
     ece353_MKII_S2_Init();
+    ece353_rgb_init();
+    ece353_MKII_RGB_IO_Init(true);
     Task_Console_Init();
+    music_init();
+    i2c_init();
+    opt3001_init();;
 
     // Enable interrupts
     __enable_irq();

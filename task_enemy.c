@@ -335,5 +335,9 @@ void check_squares(int xk_1, int yk_1, int xk_2, int yk_2)
             // Update score board
             update_score();
         }
+
+        music_play_hit();       // Play hit music
+
+        led_blink();        // Blink LED on MKII three times indicating a hit
     }
 }
