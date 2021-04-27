@@ -185,11 +185,17 @@ static void music_hit(uint16_t note_index)
 // Plays the song (loop through, playing each note)
 // and then returns
 //***************************************************************
-void music_play_song_shine(void)
+bool music_play_song_shine(void)
 {
     // loop through the struct to play the notes as the song.
     uint32_t i;
     for(i = 0; i < 30; i++){
+        if(S1_PRESSED)
+        {
+            S1_PRESSED = false;
+            ece353_MKII_Buzzer_Off();
+            return false;
+        }
         if (i % 3 == 0) {
             ece353_RGB_LED(true, false, false);
             ece353_MKII_RGB_LED(true, false, false);
@@ -209,6 +215,7 @@ void music_play_song_shine(void)
             break;
         }
     }
+    return true;
 }
 
 void music_play_shot(void)

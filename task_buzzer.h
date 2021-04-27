@@ -71,7 +71,7 @@ void music_init(void);
 
 //***************************************************************
 //***************************************************************
-void music_play_song_shine(void);
+bool music_play_song_shine(void);
 
 void music_play_shot(void);
 

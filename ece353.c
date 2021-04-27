@@ -484,7 +484,7 @@ void ece353_MKII_RGB_IO_Init(bool en_primary_function)
 
     // ADD CODE that selects the Primary module function
     // for all 3 pins
-    if(en_primary_function)
+    if(!en_primary_function)
     {
         P2->SEL0 |= BIT6;
         P2->SEL1 &= ~BIT6;

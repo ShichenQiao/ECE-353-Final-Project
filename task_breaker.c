@@ -39,6 +39,19 @@ int time_left;      // The time left in an ongoing game
 bool game_on_going = false;        // True if a game is ongoing, false otherwise
 
 /******************************************************************************
+ * Initialize the 3 GPIO pins that control the RGB LED on the MKII.
+ ******************************************************************************/
+void MKII_RGB_Init()
+{
+    // RED      : P2.6
+    // GREEN    : P2.4
+    // BLUE     : P5.6
+    P2->DIR |= BIT6;
+    P2->DIR |= BIT4;
+    P5->DIR |= BIT6;
+}
+
+/******************************************************************************
  * This function will initialize Queue_Breaker, the LCD and Sem_LCD.
  ******************************************************************************/
 void Task_Breaker_Init(void)
@@ -168,11 +181,7 @@ void Task_Breaker(void *pvParameters)
         print_pre_game_message();
 
         // Wait until S1 is pressed to start a game, play theme song when game is not started
-        while(!S1_PRESSED){
-            music_play_song_shine();
-        }
-        S1_PRESSED = false;
-        ece353_MKII_Buzzer_Off();
+        while(music_play_song_shine()){}
 
         // Cover pre-game message
         lcd_draw_rectangle(

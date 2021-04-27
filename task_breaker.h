@@ -47,6 +47,11 @@ extern int time_left;      // The time left in an ongoing game
 extern bool game_on_going;        // True if a game is ongoing, false otherwise
 
 /******************************************************************************
+ * Initialize the 3 GPIO pins that control the RGB LED on the MKII.
+ ******************************************************************************/
+void MKII_RGB_Init();
+
+/******************************************************************************
  * This function will initialize Queue_Breaker, the LCD and Sem_LCD.
  ******************************************************************************/
 void Task_Breaker_Init(void);
