@@ -39,6 +39,8 @@
 #include <task_score_board.h>
 #include <task_timer.h>
 #include <task_buzzer.h>
+#include <task_home_page.h>
+#include <task_setting_page.h>
 
 
 #endif /* __MAIN_H__ */

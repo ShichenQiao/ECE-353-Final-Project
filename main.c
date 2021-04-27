@@ -36,7 +36,27 @@ int main(void)
     printf("*********************************************\n\r");
     printf("\n\r");
 
-    // Main Gaming mode task
+    // Home Page task
+    xTaskCreate
+     (   Task_Home_Page,
+         "Task_Home_Page",
+         configMINIMAL_STACK_SIZE,
+         NULL,
+         1,
+         &Task_Home_Page_Handle
+     );
+
+    // Setting mode task
+    xTaskCreate
+     (   Task_Setting_Page,
+         "Task_Setting_Page",
+         configMINIMAL_STACK_SIZE,
+         NULL,
+         1,
+         &Task_Setting_Page_Handle
+     );
+
+    // Gaming mode task
     xTaskCreate
      (   Task_Breaker,
          "Task_Breaker",

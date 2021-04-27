@@ -196,6 +196,11 @@ bool music_play_song_shine(void)
             ece353_MKII_Buzzer_Off();
             return false;
         }
+        if(S2_PRESSED)
+        {
+            ece353_MKII_Buzzer_Off();
+            return false;
+        }
         if (i % 3 == 0) {
             ece353_RGB_LED(true, false, false);
             ece353_MKII_RGB_LED(true, false, false);

@@ -5,8 +5,8 @@
  *      Author: Justin Qiao
  */
 
-#ifndef __TASK_TIMER_H_
-#define __TASK_TIMER_H_
+#ifndef __TASK_TIMER_H__
+#define __TASK_TIMER_H__
 
 #include "main.h"
 
@@ -40,4 +40,4 @@ bool debounce_s2(void);
 void Task_Timer(void *pvParameters);
 
 
-#endif /* __TASK_TIMER_H_ */
+#endif /* __TASK_TIMER_H__ */

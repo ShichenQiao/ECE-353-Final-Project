@@ -174,327 +174,363 @@ void Task_Breaker(void *pvParameters)
 
     while(1)
     {
-        // Reset the game
-        reset_game();
+        // Wait until entering game mode from the home page
+        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
-        // Print pre-game message
-        print_pre_game_message();
+        while(1)
+        {
+            // Reset the game
+            reset_game();
 
-        // Wait until S1 is pressed to start a game, play theme song when game is not started
-        while(music_play_song_shine()){}
+            // Print pre-game message
+            print_pre_game_message();
 
-        // Cover pre-game message
+            // Play theme song until S1 or S2 is pressed
+            while(music_play_song_shine()){}
+
+            // If S2 pressed, exit Gaming mode
+            if(S2_PRESSED)
+            {
+                S2_PRESSED = false;
+                break;
+            }
+            // Otherwise, loop back and game will be reset
+
+            // Cover pre-game message
+            lcd_draw_rectangle(
+              67,
+              67,
+              84,
+              54,
+              LCD_COLOR_BLACK
+            );
+
+            // Set flag showing a game is on going
+            game_on_going = true;
+
+            // Notify Task_Score_Board to initialize with the given game length
+            xTaskNotifyGive(Task_Score_Board_Handle);
+
+            // Indicate whether the shot ball music has been played.
+            bool shot_music = false;
+
+            // Enter the Gaming Mode
+            while(game_on_going)
+            {
+                TANK_CMD_t message;     // Message received from Queue_Breaker
+
+                bool tank_update = true;     // Reset flag
+
+                // Notify Task_Enemy to start generating enemy squares
+                xTaskNotifyGive(Task_Enemy_Handle);
+
+                // Wait indefinitely until a message is received
+                xQueueReceive(Queue_Breaker, &message, portMAX_DELAY);
+
+                // Get the current draw frame of the tank
+                lcd_get_draw_frame(tank_x, tank_y, tankWidthPixels, tankHeightPixels, &x0, &x1, &y0, &y1);
+
+                // Set background color
+                set_bgc();
+
+                // Examine the message received, move the tank accordingly without passing boarders or running into enemies
+                switch(message){
+                    case TANK_CMD_LEFT:
+                    {
+                        // Check Left boarder of the tank
+                        for(i = y0; i < y1; i++)
+                        {
+                            if(occupied[i][x0 - 1])
+                            {
+                                tank_update = false;
+                            }
+                        }
+
+                        // Update direction to Left
+                        tank_dir = 0;
+
+                        // If the tank is allowed to pass, go Left by 1 pixel
+                        if(tank_update)
+                        {
+                            tank_x--;
+                        }
+
+                        // Update the tank
+                        xSemaphoreTake(Sem_LCD, portMAX_DELAY);
+
+                        lcd_draw_image(
+                                tank_x,
+                                tank_y,
+                                tankWidthPixels,
+                                tankHeightPixels,
+                                tank_leftBitmaps,
+                                tank_lcd_color,
+                                LCD_COLOR_BLACK
+                        );
+
+                        xSemaphoreGive(Sem_LCD);
+
+                        break;
+                    }
+                    case TANK_CMD_RIGHT:
+                    {
+                        // Check Right boarder of the tank
+                        for(i = y0; i < y1; i++)
+                        {
+                            if(occupied[i][x1 + 1])
+                            {
+                                tank_update = false;
+                            }
+                        }
+
+                        // Update direction to Right
+                        tank_dir = 1;
+
+                        // If the tank is allowed to pass, go Right by 1 pixel
+                        if(tank_update)
+                        {
+                            tank_x++;
+                        }
+
+                        // Update the tank
+                        xSemaphoreTake(Sem_LCD, portMAX_DELAY);
+
+                        lcd_draw_image(
+                                tank_x,
+                                tank_y,
+                                tankWidthPixels,
+                                tankHeightPixels,
+                                tank_rightBitmaps,
+                                tank_lcd_color,
+                                LCD_COLOR_BLACK
+                        );
+
+                        xSemaphoreGive(Sem_LCD);
+
+                        break;
+                    }
+                    case TANK_CMD_DOWN:
+                    {
+                        // Check Down boarder of the tank
+                        for(i = x0; i < x1; i++)
+                        {
+                            if(occupied[y1 + 1][i])
+                            {
+                                tank_update = false;
+                            }
+                        }
+
+                        // Update direction to Down
+                        tank_dir = 3;
+
+                        // If the tank is allowed to pass, go Down by 1 pixel
+                        if(tank_update)
+                        {
+                            tank_y++;
+                        }
+
+                        // Update the tank
+                        xSemaphoreTake(Sem_LCD, portMAX_DELAY);
+
+                        lcd_draw_image(
+                                tank_x,
+                                tank_y,
+                                tankWidthPixels,
+                                tankHeightPixels,
+                                tank_downBitmaps,
+                                tank_lcd_color,
+                                LCD_COLOR_BLACK
+                        );
+
+                        xSemaphoreGive(Sem_LCD);
+
+                        break;
+                    }
+                    case TANK_CMD_UP:
+                    {
+                        // Check Up boarder of the tank
+                        for(i = x0; i < x1; i++)
+                        {
+                            if(occupied[y0 - 1][i])
+                            {
+                                tank_update = false;
+                            }
+                        }
+
+                        // Update direction to Up
+                        tank_dir = 2;
+
+                        // If the tank is allowed to pass, go Up by 1 pixel
+                        if(tank_update)
+                        {
+                            tank_y--;
+                        }
+
+                        // Update the tank
+                        xSemaphoreTake(Sem_LCD, portMAX_DELAY);
+
+                        lcd_draw_image(
+                                tank_x,
+                                tank_y,
+                                tankWidthPixels,
+                                tankHeightPixels,
+                                tank_upBitmaps,
+                                tank_lcd_color,
+                                LCD_COLOR_BLACK
+                        );
+
+                        xSemaphoreGive(Sem_LCD);
+
+                        break;
+                    }
+                    case TANK_CMD_CENTER:        // Do not update the tank in this case
+                    {
+                        tank_update = false;
+                        break;
+                    }
+                    case TANK_CMD_LAUNCH:       // Launch the ball if it has not been launched
+                    {
+                        if(!ball_launched)
+                        {
+                            ball_dir = tank_dir;
+                            ball_launched = true;
+                        }
+                        break;
+                    }
+                }
+
+                // Launch the ball if haven't yet when S1 is pressed during a game
+                if(!ball_launched && S1_PRESSED)
+                {
+                    ball_dir = tank_dir;
+                    ball_launched = true;
+                }
+
+                if(!ball_launched)   // If the ball was not launched
+                {
+                    // Make the ball follow the tank's position
+                    if(tank_update)
+                    {
+                        ball_reset();
+                    }
+
+                    // If not launched, stop playing music
+                    shot_music = false;
+                }
+                else        // If the ball is launched
+                {
+                    // Recored the previous position of the ball for clearing before move
+                    ball_prev_x = ball_x;
+                    ball_prev_y = ball_y;
+
+                    if (!shot_music) {  // If not played the music before, play the shot music
+                        // Play hit sound effect
+                        music_play_shot();
+                        shot_music = true;
+                    }
+
+                    // If the ball is still in the range of the boarders, move it
+                    if(ball_y > 32 && ball_y < 125 && ball_x > 13 && ball_x < 119)
+                    {
+                        // Attempt to move the ball twice as fast as the tank does
+                        switch(ball_dir)
+                        {
+                            case 0:     // Go Left
+                            {
+                                ball_x -= 2;
+                                break;
+                            }
+                            case 1:     // Go Right
+                            {
+                                ball_x += 2;
+                                break;
+                            }
+                            case 2:     // Go Up
+                            {
+                                ball_y -= 2;
+                                break;
+                            }
+                            case 3:     // Go Down
+                            {
+                                ball_y += 2;
+                                break;
+                            }
+                        }
+
+                        xSemaphoreTake(Sem_LCD, portMAX_DELAY);
+
+                        // Clear previous ball's position
+                        lcd_draw_image(
+                                ball_prev_x,
+                                ball_prev_y,
+                                ballWidthPixels,
+                                ballHeightPixels,
+                                image_ball,
+                                LCD_COLOR_BLACK,
+                                LCD_COLOR_BLACK
+                        );
+                        // Re-draw the ball at its new position
+                        lcd_draw_image(
+                                ball_x,
+                                ball_y,
+                                ballWidthPixels,
+                                ballHeightPixels,
+                                image_ball,
+                                tank_lcd_color,
+                                LCD_COLOR_BLACK
+                        );
+
+                        xSemaphoreGive(Sem_LCD);
+
+                        // Redraw the tank at its current position so that the ball will not cover the tank
+                        tank_recover();
+                    }
+                    else    // If the ball is moving out of the boarder, reset it
+                    {
+                        ball_reset();
+                    }
+                }
+
+                // Reset S1 on MKII
+                S1_PRESSED = false;
+
+                // Delay for 20mS
+                vTaskDelay(pdMS_TO_TICKS(20));
+            }
+
+            // When a game ends, display end game message with score earned
+            print_end_game_message();
+
+            // Make sure excess presses at the end of the game do not influence showing the result
+            S1_PRESSED = false;
+
+            // Wait until S1 or S2 is pressed
+            while(!S1_PRESSED && !S2_PRESSED){};
+
+            // If S2 pressed, exit Gaming mode
+            if(S2_PRESSED)
+            {
+                S2_PRESSED = false;
+                break;
+            }
+            // Otherwise, loop back and game will be reset
+
+            // Reset S1
+            S1_PRESSED = false;
+
+        }
+
+        // Cover Gaming page
         lcd_draw_rectangle(
           67,
           67,
-          84,
-          54,
+          132,
+          132,
           LCD_COLOR_BLACK
         );
 
-        // Set flag showing a game is on going
-        game_on_going = true;
-
-        // Notify Task_Score_Board to initialize with the given game length
-        xTaskNotifyGive(Task_Score_Board_Handle);
-
-        // Indicate whether the shot ball music has been played.
-        bool shot_music = false;
-
-        // Enter the Gaming Mode
-        while(game_on_going)
-        {
-            TANK_CMD_t message;     // Message received from Queue_Breaker
-
-            bool tank_update = true;     // Reset flag
-
-            // Notify Task_Enemy to start generating enemy squares
-            xTaskNotifyGive(Task_Enemy_Handle);
-
-            // Wait indefinitely until a message is received
-            xQueueReceive(Queue_Breaker, &message, portMAX_DELAY);
-
-            // Get the current draw frame of the tank
-            lcd_get_draw_frame(tank_x, tank_y, tankWidthPixels, tankHeightPixels, &x0, &x1, &y0, &y1);
-
-            // Set background color
-            set_bgc();
-
-            // Examine the message received, move the tank accordingly without passing boarders or running into enemies
-            switch(message){
-                case TANK_CMD_LEFT:
-                {
-                    // Check Left boarder of the tank
-                    for(i = y0; i < y1; i++)
-                    {
-                        if(occupied[i][x0 - 1])
-                        {
-                            tank_update = false;
-                        }
-                    }
-
-                    // Update direction to Left
-                    tank_dir = 0;
-
-                    // If the tank is allowed to pass, go Left by 1 pixel
-                    if(tank_update)
-                    {
-                        tank_x--;
-                    }
-
-                    // Update the tank
-                    xSemaphoreTake(Sem_LCD, portMAX_DELAY);
-
-                    lcd_draw_image(
-                            tank_x,
-                            tank_y,
-                            tankWidthPixels,
-                            tankHeightPixels,
-                            tank_leftBitmaps,
-                            tank_lcd_color,
-                            LCD_COLOR_BLACK
-                    );
-
-                    xSemaphoreGive(Sem_LCD);
-
-                    break;
-                }
-                case TANK_CMD_RIGHT:
-                {
-                    // Check Right boarder of the tank
-                    for(i = y0; i < y1; i++)
-                    {
-                        if(occupied[i][x1 + 1])
-                        {
-                            tank_update = false;
-                        }
-                    }
-
-                    // Update direction to Right
-                    tank_dir = 1;
-
-                    // If the tank is allowed to pass, go Right by 1 pixel
-                    if(tank_update)
-                    {
-                        tank_x++;
-                    }
-
-                    // Update the tank
-                    xSemaphoreTake(Sem_LCD, portMAX_DELAY);
-
-                    lcd_draw_image(
-                            tank_x,
-                            tank_y,
-                            tankWidthPixels,
-                            tankHeightPixels,
-                            tank_rightBitmaps,
-                            tank_lcd_color,
-                            LCD_COLOR_BLACK
-                    );
-
-                    xSemaphoreGive(Sem_LCD);
-
-                    break;
-                }
-                case TANK_CMD_DOWN:
-                {
-                    // Check Down boarder of the tank
-                    for(i = x0; i < x1; i++)
-                    {
-                        if(occupied[y1 + 1][i])
-                        {
-                            tank_update = false;
-                        }
-                    }
-
-                    // Update direction to Down
-                    tank_dir = 3;
-
-                    // If the tank is allowed to pass, go Down by 1 pixel
-                    if(tank_update)
-                    {
-                        tank_y++;
-                    }
-
-                    // Update the tank
-                    xSemaphoreTake(Sem_LCD, portMAX_DELAY);
-
-                    lcd_draw_image(
-                            tank_x,
-                            tank_y,
-                            tankWidthPixels,
-                            tankHeightPixels,
-                            tank_downBitmaps,
-                            tank_lcd_color,
-                            LCD_COLOR_BLACK
-                    );
-
-                    xSemaphoreGive(Sem_LCD);
-
-                    break;
-                }
-                case TANK_CMD_UP:
-                {
-                    // Check Up boarder of the tank
-                    for(i = x0; i < x1; i++)
-                    {
-                        if(occupied[y0 - 1][i])
-                        {
-                            tank_update = false;
-                        }
-                    }
-
-                    // Update direction to Up
-                    tank_dir = 2;
-
-                    // If the tank is allowed to pass, go Up by 1 pixel
-                    if(tank_update)
-                    {
-                        tank_y--;
-                    }
-
-                    // Update the tank
-                    xSemaphoreTake(Sem_LCD, portMAX_DELAY);
-
-                    lcd_draw_image(
-                            tank_x,
-                            tank_y,
-                            tankWidthPixels,
-                            tankHeightPixels,
-                            tank_upBitmaps,
-                            tank_lcd_color,
-                            LCD_COLOR_BLACK
-                    );
-
-                    xSemaphoreGive(Sem_LCD);
-
-                    break;
-                }
-                case TANK_CMD_CENTER:        // Do not update the tank in this case
-                {
-                    tank_update = false;
-                    break;
-                }
-                case TANK_CMD_LAUNCH:       // Launch the ball if it has not been launched
-                {
-                    if(!ball_launched)
-                    {
-                        ball_dir = tank_dir;
-                        ball_launched = true;
-                    }
-                    break;
-                }
-            }
-
-            // Launch the ball if haven't yet when S1 is pressed during a game
-            if(!ball_launched && S1_PRESSED)
-            {
-                ball_dir = tank_dir;
-                ball_launched = true;
-            }
-
-            if(!ball_launched)   // If the ball was not launched
-            {
-                // Make the ball follow the tank's position
-                if(tank_update)
-                {
-                    ball_reset();
-                }
-
-                // If not launched, stop playing music
-                shot_music = false;
-            }
-            else        // If the ball is launched
-            {
-                // Recored the previous position of the ball for clearing before move
-                ball_prev_x = ball_x;
-                ball_prev_y = ball_y;
-
-                if (!shot_music) {  // If not played the music before, play the shot music
-                    // Play hit sound effect
-                    music_play_shot();
-                    shot_music = true;
-                }
-
-                // If the ball is still in the range of the boarders, move it
-                if(ball_y > 32 && ball_y < 125 && ball_x > 13 && ball_x < 119)
-                {
-                    // Attempt to move the ball twice as fast as the tank does
-                    switch(ball_dir)
-                    {
-                        case 0:     // Go Left
-                        {
-                            ball_x -= 2;
-                            break;
-                        }
-                        case 1:     // Go Right
-                        {
-                            ball_x += 2;
-                            break;
-                        }
-                        case 2:     // Go Up
-                        {
-                            ball_y -= 2;
-                            break;
-                        }
-                        case 3:     // Go Down
-                        {
-                            ball_y += 2;
-                            break;
-                        }
-                    }
-
-                    xSemaphoreTake(Sem_LCD, portMAX_DELAY);
-
-                    // Clear previous ball's position
-                    lcd_draw_image(
-                            ball_prev_x,
-                            ball_prev_y,
-                            ballWidthPixels,
-                            ballHeightPixels,
-                            image_ball,
-                            LCD_COLOR_BLACK,
-                            LCD_COLOR_BLACK
-                    );
-                    // Re-draw the ball at its new position
-                    lcd_draw_image(
-                            ball_x,
-                            ball_y,
-                            ballWidthPixels,
-                            ballHeightPixels,
-                            image_ball,
-                            tank_lcd_color,
-                            LCD_COLOR_BLACK
-                    );
-
-                    xSemaphoreGive(Sem_LCD);
-
-                    // Redraw the tank at its current position so that the ball will not cover the tank
-                    tank_recover();
-                }
-                else    // If the ball is moving out of the boarder, reset it
-                {
-                    ball_reset();
-                }
-            }
-
-            // Reset S1 on MKII
-            S1_PRESSED = false;
-
-            // Delay for 20mS
-            vTaskDelay(pdMS_TO_TICKS(20));
-        }
-
-        // When a game ends, display end game message with score earned
-        print_end_game_message();
-
-        // Make sure excess presses at the end of the game do not influence showing the result
-        S1_PRESSED = false;
-
-        // Wait until S1 is pressed to reset the game
-        while(!S1_PRESSED){};
-        S1_PRESSED = false;
-
+        // Go back to home page
+        xTaskNotifyGive(Task_Home_Page_Handle);
     }
 }
 
