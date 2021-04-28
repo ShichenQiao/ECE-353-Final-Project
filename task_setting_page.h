@@ -36,4 +36,11 @@ void set_game_duration_seconds();
  ******************************************************************************/
 void set_number_of_colors();
 
+/******************************************************************************
+ * Set the background color, either White or Black (default is Black)
+ * according to the lux reading from the light sensor. Press S1 to begin.
+ * Press S2 to confirm and go back to home page.
+ ******************************************************************************/
+void set_background();
+
 #endif /* __TASK_SETTING_PAGE_H__ */

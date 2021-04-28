@@ -179,6 +179,40 @@ void Task_Breaker(void *pvParameters)
         // Wait until entering game mode from the home page
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
+        xSemaphoreTake(Sem_Console, portMAX_DELAY);
+
+        // Print Gaming mode instructions
+        printf("\n\r");
+        printf("*** You are at the Gaming Mode ***\n\r");
+        printf("\n\r");
+
+        printf("\n\r");
+        printf("* Press S1 to start a new game *\n\r");
+        printf("* Press S2 to return to home page *\n\r");
+        printf("\n\r");
+
+        printf("\n\r");
+        printf("* During a game *\n\r");
+        printf("* You could use the accelerometer to control the tank *\n\r");
+        printf("* You could Press S1 to launch the ball *\n\r");
+        printf("* You could Press S2 to change the color of your tank *\n\r");
+        printf("\n\r");
+
+        printf("\n\r");
+        printf("* During a game, if you have a keyboard *\n\r");
+        printf("* You could also use w(up), a(left), s(down), d(right) to control the tank more precisely *\n\r");
+        printf("* You could also press space to launch the ball *\n\r");
+        printf("\n\r");
+
+        printf("\n\r");
+        printf("* The ball will have the same color with the tank when it was launched *\n\r");
+        printf("* If the ball and a square have matched color, you will destroy the square and score 1 point *\n\r");
+        printf("* Otherwise, the color of the square will re randomly changed *\n\r");
+        printf("* GOOD LUCK!!! *\n\r");
+        printf("\n\r");
+
+        xSemaphoreGive(Sem_Console);
+
         while(1)
         {
             // Reset the game
@@ -502,6 +536,20 @@ void Task_Breaker(void *pvParameters)
                 vTaskDelay(pdMS_TO_TICKS(20));
             }
 
+            xSemaphoreTake(Sem_Console, portMAX_DELAY);
+
+            // Print end game instructions
+            printf("\n\r");
+            printf("*** GAME OVER!!! ***\n\r");
+            printf("\n\r");
+
+            printf("\n\r");
+            printf("* Press S1 to reset the game *\n\r");
+            printf("* Press S2 to return to home page *\n\r");
+            printf("\n\r");
+
+            xSemaphoreGive(Sem_Console);
+
             // When a game ends, display end game message with score earned
             print_end_game_message();
 
@@ -643,13 +691,26 @@ void tank_recover()
 void print_pre_game_message()
 {
     // Draw a box on the middle of the LCD to show pre game message
-    lcd_draw_rectangle(
-      67,
-      67,
-      84,
-      54,
-      LCD_COLOR_YELLOW
-    );
+    if(background_color == LCD_COLOR_BLACK)
+    {
+        lcd_draw_rectangle(
+          67,
+          67,
+          84,
+          54,
+          LCD_COLOR_YELLOW
+        );
+    }
+    else
+    {
+        lcd_draw_rectangle(
+          67,
+          67,
+          84,
+          54,
+          LCD_COLOR_BLUE
+        );
+    }
     lcd_draw_rectangle(
       67,
       67,
@@ -699,13 +760,26 @@ void print_pre_game_message()
 void print_end_game_message()
 {
     // Draw a box on the middle of the LCD to show end game message
-    lcd_draw_rectangle(
-      67,
-      67,
-      84,
-      54,
-      LCD_COLOR_YELLOW
-    );
+    if(background_color == LCD_COLOR_BLACK)
+    {
+        lcd_draw_rectangle(
+          67,
+          67,
+          84,
+          54,
+          LCD_COLOR_YELLOW
+        );
+    }
+    else
+    {
+        lcd_draw_rectangle(
+          67,
+          67,
+          84,
+          54,
+          LCD_COLOR_BLUE
+        );
+    }
     lcd_draw_rectangle(
       67,
       67,

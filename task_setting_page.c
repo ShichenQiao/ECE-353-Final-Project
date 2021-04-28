@@ -340,21 +340,56 @@ void set_number_of_colors()
 }
 
 /******************************************************************************
- * Adjust the background color with respect to the ambient light sensor's reading
- * Press button S2 to confirm setting.
+ * Set the background color, either White or Black (default is Black)
+ * according to the lux reading from the light sensor. Press S1 to begin.
+ * Press S2 to confirm and go back to home page.
  ******************************************************************************/
 void set_background()
 {
-    // Print "[S1] CHANGE" to LCD
-    lcd_print_char(20, 40, 'B');
-    lcd_print_char(28, 40, 'G');
+    xSemaphoreTake(Sem_Console, portMAX_DELAY);
 
-    lcd_print_char(70, 40, 'C');
-    lcd_print_char(78, 40, 'O');
-    lcd_print_char(86, 40, 'L');
-    lcd_print_char(94, 40, 'O');
-    lcd_print_char(102, 40, 'R');
-    lcd_print_char(110, 40, 'S');
+    // Print instructions
+    printf("\n\r");
+    printf("* You are now setting the background color *\n\r");
+    printf("* Press S1 to begin setting *\n\r");
+    printf("* Press S2 to finish setting *\n\r");
+    printf("* After pressing S1, please adjust the board in the position you will play the game *\n\r");
+    printf("* The light sensor will detect the room light level *\n\r");
+    printf("* And it will set background to WHITE/BLACK accordingly until S2 is pressed *\n\r");
+    printf("\n\r");
+
+    xSemaphoreGive(Sem_Console);
+
+    // Cover previous S1 instruction
+    lcd_draw_rectangle(
+      67,
+      90,
+      100,
+      15,
+      background_color
+    );
+
+    // Print "BG-COLOR" to LCD
+    lcd_print_char(37, 50, 'B');
+    lcd_print_char(45, 50, 'G');
+    lcd_print_char(53, 50, '-');
+    lcd_print_char(61, 50, 'C');
+    lcd_print_char(69, 50, 'O');
+    lcd_print_char(77, 50, 'L');
+    lcd_print_char(85, 50, 'O');
+    lcd_print_char(93, 50, 'R');
+
+    // Print "[S1] BEGIN" to LCD
+    lcd_print_char(20, 90, '[');
+    lcd_print_char(28, 90, 'S');
+    lcd_print_char(36, 90, '1');
+    lcd_print_char(44, 90, ']');
+
+    lcd_print_char(54, 90, 'B');
+    lcd_print_char(62, 90, 'E');
+    lcd_print_char(70, 90, 'G');
+    lcd_print_char(78, 90, 'I');
+    lcd_print_char(86, 90, 'N');
 
     // Print "[S2] CONFIRM" to LCD
     lcd_print_char(20, 102, '[');
@@ -369,6 +404,18 @@ void set_background()
     lcd_print_char(83, 102, 'I');
     lcd_print_char(89, 102, 'R');
     lcd_print_char(97, 102, 'M');
+
+    // Wait until a button is pressed
+    while(!S1_PRESSED && !S2_PRESSED){}
+
+    if(S1_PRESSED)      // Begin reading lux value and adjust bg color if S1 was pressed
+    {
+        S1_PRESSED = false;
+    }
+    if(S2_PRESSED)      // Confirm settings and return if S2 was pressed
+    {
+        return;
+    }
 
     while(1)
     {
@@ -399,6 +446,7 @@ void set_background()
             vTaskDelay(pdMS_TO_TICKS(200));
         }
 
+        // If S2 is pressed, use the most recent lux reading to adjust the background color and return
         if(S2_PRESSED)
         {
             // Update global variable
@@ -412,10 +460,9 @@ void set_background()
             // Exit Setting mode
             break;
         }
-        else if(S1_PRESSED)
+        else if(S1_PRESSED)     // Ignonre S1 presses for now
         {
             S1_PRESSED = false;     // Reset S1
         }
     }
-
 }
