@@ -100,7 +100,7 @@ static __inline void i2c_wait_busy(void)
 }
 
 /**********************************************************************************************
- * Clears the i2c interrupt
+ *
  **********************************************************************************************/
 static __inline void i2c_clear_interrupts(void)
 {
@@ -108,7 +108,7 @@ static __inline void i2c_clear_interrupts(void)
 }
 
 /**********************************************************************************************
- * Initialize the i2c bus
+ *
  **********************************************************************************************/
 void i2c_init(void)
 {
@@ -132,7 +132,7 @@ void i2c_init(void)
 
 
 /**********************************************************************************************
- * Write in 16 bits of data to the opt3001
+ *
  **********************************************************************************************/
 void i2c_write_16(uint8_t slave_address, uint8_t dev_address, uint16_t data)
 {
@@ -181,7 +181,7 @@ void i2c_write_16(uint8_t slave_address, uint8_t dev_address, uint16_t data)
 }
 
 /**********************************************************************************************
- * Read in 16 bits of data
+ *
  **********************************************************************************************/
 uint16_t i2c_read_16(uint8_t slave_address, uint8_t dev_address)
 {
@@ -235,3 +235,6 @@ uint16_t i2c_read_16(uint8_t slave_address, uint8_t dev_address)
     return ((uint16_t)(upper_byte) << 8) | lower_byte;
 
 }
+
+
+

@@ -32,6 +32,7 @@
 #include <font_arial.h>
 #include <tank.h>
 #include <logo.h>
+#include <title.h>
 
 /* FreeRTOS Tasks */
 #include <task_accelerometer.h>

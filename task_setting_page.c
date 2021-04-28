@@ -9,6 +9,9 @@
 
 TaskHandle_t Task_Setting_Page_Handle;
 
+int game_duration_seconds = 120;
+int number_of_colors = 11;       // Number of colors used in game (3 to 11, default 11)
+
 /******************************************************************************
  *
  ******************************************************************************/
@@ -18,31 +21,29 @@ void Task_Setting_Page(void *pvParameters)
     {
         // Wait until entering setting mode from the home page
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-	// Indicate which choice of the setting page
-	int choice = 0;
 
         while(1)
         {
-            lcd_print_char(49, 73, 'S');
-            lcd_print_char(57, 73, 'E');
-            lcd_print_char(65, 73, 'T');
-            lcd_print_char(73, 73, 'T');
-            lcd_print_char(81, 73, 'I');
-            lcd_print_char(89, 73, 'N');
-            lcd_print_char(97, 73, 'G');
+            // Draw the "SETTINGS" title to LCD
+            lcd_draw_image(
+                    67,
+                    20,
+                    titleWidthPixels,
+                    titleHeightPixels,
+                    titleBitmaps,
+                    LCD_COLOR_YELLOW,
+                    LCD_COLOR_BLACK
+            );
+
+            // Set number of colors
+            set_number_of_colors();
 
             while(!S1_PRESSED && !S2_PRESSED){}
-	    
-	    if (S1_PRESSED) {
-		choice++;
-	    }
-		
-	    
 
             if(S2_PRESSED)
             {
                 S2_PRESSED = false;     // Reset S2
-		
+
                 // Cover setting page
                 lcd_draw_rectangle(
                   67,
@@ -51,8 +52,6 @@ void Task_Setting_Page(void *pvParameters)
                   132,
                   LCD_COLOR_BLACK
                 );
-		
-		choice--;
 
                 // Exit Setting mode
                 break;
@@ -65,5 +64,106 @@ void Task_Setting_Page(void *pvParameters)
 
         // Go back to home page
         xTaskNotifyGive(Task_Home_Page_Handle);
+    }
+}
+
+/******************************************************************************
+ *
+ ******************************************************************************/
+void set_number_of_colors()
+{
+    while(1)
+    {
+        // Print "[S1] CHANGE" to LCD
+        lcd_print_char(20, 40, 'N');
+        lcd_print_char(28, 40, 'U');
+        lcd_print_char(36, 40, 'M');
+
+        lcd_print_char(49, 40, 'O');
+        lcd_print_char(57, 40, 'F');
+
+        lcd_print_char(70, 40, 'C');
+        lcd_print_char(78, 40, 'O');
+        lcd_print_char(86, 40, 'L');
+        lcd_print_char(94, 40, 'O');
+        lcd_print_char(102, 40, 'R');
+        lcd_print_char(110, 40, 'S');
+
+        // Print "[S1] CHANGE" to LCD
+        lcd_print_char(20, 90, '[');
+        lcd_print_char(28, 90, 'S');
+        lcd_print_char(36, 90, '1');
+        lcd_print_char(44, 90, ']');
+
+        lcd_print_char(54, 90, 'C');
+        lcd_print_char(62, 90, 'H');
+        lcd_print_char(70, 90, 'A');
+        lcd_print_char(78, 90, 'N');
+        lcd_print_char(86, 90, 'G');
+        lcd_print_char(94, 90, 'E');
+
+        // Print "[S2] CONFIRM" to LCD
+        lcd_print_char(20, 102, '[');
+        lcd_print_char(28, 102, 'S');
+        lcd_print_char(36, 102, '2');
+        lcd_print_char(44, 102, ']');
+
+        lcd_print_char(54, 102, 'C');
+        lcd_print_char(62, 102, 'O');
+        lcd_print_char(70, 102, 'N');
+        lcd_print_char(78, 102, 'F');
+        lcd_print_char(83, 102, 'I');
+        lcd_print_char(89, 102, 'R');
+        lcd_print_char(97, 102, 'M');
+
+        char a, b, c;       // Used to store parsed digits in chars
+        int_to_three_chars(number_of_colors, &a, &b, &c);        // Parse current number
+
+        // Cover original number
+        lcd_draw_rectangle(
+          67,
+          55,
+          30,
+          15,
+          LCD_COLOR_BLACK
+        );
+
+        // Print current number of colors to LCD
+        lcd_print_char(54, 55, a);
+        lcd_print_char(62, 55, b);
+        lcd_print_char(70, 55, c);
+
+        // Wait until a button is pressed
+        while(!S1_PRESSED && !S2_PRESSED){}
+
+        // If S1 was pressed, update number
+        if(S1_PRESSED)
+        {
+            S1_PRESSED = false;     // Reset S1
+
+            // Update number
+            number_of_colors = (number_of_colors + 1) % 12;
+
+            // Make sure number is >= 3
+            if(number_of_colors < 3)
+            {
+                number_of_colors = 3;
+            }
+        }
+        else if(S2_PRESSED)     // If S2 was pressed, go to next setting
+        {
+            S2_PRESSED = false;     // Reset S2
+
+            // Cover current setting
+            lcd_draw_rectangle(
+              67,
+              50,
+              100,
+              30,
+              LCD_COLOR_BLACK
+            );
+
+            break;      // Go to next setting
+        }
     }
 }
