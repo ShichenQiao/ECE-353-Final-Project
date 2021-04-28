@@ -5,7 +5,7 @@
  *      Author: Justin Qiao
  */
 
-#include <logo.h>
+#include "logo.h"
 
 /* 
  *  Image data for the logo

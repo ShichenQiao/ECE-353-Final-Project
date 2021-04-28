@@ -5,7 +5,7 @@
  *      Author: Justin Qiao
  */
 
-#include <title.h>
+#include "title.h"
 
 /* 
  *  Image data for the "SETTINGS" title

@@ -8,7 +8,7 @@
 #ifndef __TASK_CONSOLE_H__
 #define __TASK_CONSOLE_H__
 
-#include <main.h>
+#include "main.h"
 
 extern TaskHandle_t Task_Console_Handle;
 extern SemaphoreHandle_t Sem_Console;

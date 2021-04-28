@@ -5,7 +5,7 @@
  *      Author: Justin Qiao
  */
 
-#include <main.h>
+#include "main.h"
 
 TaskHandle_t Task_Accelerometer_Handle;
 

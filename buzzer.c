@@ -5,7 +5,7 @@
  *
  */
 
-#include <buzzer.h>
+#include "buzzer.h"
 #include "main.h"
 
 // Notes for the Main Theme music

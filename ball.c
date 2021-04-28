@@ -8,7 +8,7 @@
 /* 
  *  Image data for the ball
  */
-#include <ball.h>
+#include "ball.h"
 
 // The out-most rows and columns are NOT leave blank intentionally for precision.
 // Have to redraw it in the background color to erase.

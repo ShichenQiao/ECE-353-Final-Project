@@ -8,7 +8,7 @@
 /* 
  *  Image data for tank in 4 directions
  */
-#include <tank.h>
+#include "tank.h"
 
 /*
 **  Image data for tank_up
