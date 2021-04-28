@@ -12,12 +12,18 @@
 
 extern TaskHandle_t Task_Setting_Page_Handle;
 
-extern int number_of_colors;
+extern int game_duration_seconds;        // Game duration in seconds.
+extern int number_of_colors;        // Number of colors used in game (3 to 11, default 11)
 
 /******************************************************************************
  *
  ******************************************************************************/
 void Task_Setting_Page(void *pvParameters);
+
+/******************************************************************************
+ *
+ ******************************************************************************/
+void set_game_duration_seconds();
 
 /******************************************************************************
  *

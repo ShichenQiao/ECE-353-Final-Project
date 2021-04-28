@@ -142,8 +142,8 @@ void reset_game()
 
     xSemaphoreGive(Sem_LCD);
 
-    // Default game length: 120 seconds
-    time_left = 120;
+    // Set game duration, default game length is 120 seconds
+    time_left = game_duration_seconds;
 
     // Reset score
     score = 0;

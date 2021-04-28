@@ -80,7 +80,7 @@ void Task_Enemy(void *pvParameters)
                 y = r * 12 + 32;
 
                 // Randomly generate a color for the new square
-                Color_t color = rand() % 11;
+                Color_t color = rand() % number_of_colors;
                 enemies[r][c].color = color;
                 uint16_t lcd_color = get_lcd_color(color);
 
@@ -294,7 +294,7 @@ void check_squares(int xk_1, int yk_1, int xk_2, int yk_2)
         if(!match_1 && enemies[ball_r_1][ball_c_1].occupied && ball_r_1 < 8 && ball_c_1 < 9)
         {
             // Randomly generate a color for the new square
-            color = rand() % 11;
+            color = rand() % number_of_colors;
             enemies[ball_r_1][ball_c_1].color = color;
 
             // Draw the new square
@@ -313,7 +313,7 @@ void check_squares(int xk_1, int yk_1, int xk_2, int yk_2)
         if(!match_2 && enemies[ball_r_2][ball_c_2].occupied && ball_r_2 < 8 && ball_c_2 < 9)
         {
             // Randomly generate a color for the new square
-            color = rand() % 11;
+            color = rand() % number_of_colors;
             enemies[ball_r_2][ball_c_2].color = color;
 
             // Draw the new square

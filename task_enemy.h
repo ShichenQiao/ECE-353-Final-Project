@@ -17,15 +17,15 @@ extern TaskHandle_t Task_Enemy_Handle;
 typedef enum {
     RED,
     GREEN,
-    GREEN2,
     BLUE,
-    BLUE2,
     YELLOW,
     ORANGE,
     CYAN,
     MAGENTA,
     GRAY,
-    BROWN
+    BROWN,
+    GREEN2,
+    BLUE2
 } Color_t;
 
 // Shared information about the tank

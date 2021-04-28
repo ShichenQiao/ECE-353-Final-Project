@@ -104,7 +104,7 @@ void Task_Timer(void *pvParameters)
             if(game_on_going && !ball_launched)
             {
                 // Intentionally mixed enum type and int to rotate between colors
-                tank_color = (tank_color + 1) % 11;
+                tank_color = (tank_color + 1) % number_of_colors;
                 tank_lcd_color = get_lcd_color(tank_color);
 
                 xSemaphoreTake(Sem_LCD, portMAX_DELAY);
