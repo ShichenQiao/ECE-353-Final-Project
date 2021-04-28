@@ -374,15 +374,30 @@ void lcd_print_char(uint16_t x, uint16_t y, char c)
     xSemaphoreTake(Sem_LCD, portMAX_DELAY);
 
     // Print c to specified position on LCD
-    lcd_draw_image(
-            x,
-            y,
-            width,
-            height,
-            arial_8ptBitmaps + offset,
-            LCD_COLOR_YELLOW,
-            LCD_COLOR_BLACK
-    );
+    if(background_color == LCD_COLOR_BLACK)
+    {
+        lcd_draw_image(
+                x,
+                y,
+                width,
+                height,
+                arial_8ptBitmaps + offset,
+                LCD_COLOR_YELLOW,
+                background_color
+        );
+    }
+    else
+    {
+        lcd_draw_image(
+                x,
+                y,
+                width,
+                height,
+                arial_8ptBitmaps + offset,
+                LCD_COLOR_BLUE,
+                background_color
+        );
+    }
 
     xSemaphoreGive(Sem_LCD);
 }

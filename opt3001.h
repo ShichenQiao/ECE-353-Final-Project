@@ -36,7 +36,8 @@ void opt3001_init(void);
 float opt3001_read_lux(void);
 
 /******************************************************************************
- * Turn on BLUE RGB LED if the background color is to be black, else if it will be white, turn on the RED RGB LED.
+ * Turn on BLUE RGB LED if the background color is to be black, else if it will
+ * be white, turn on the RED RGB LED.
  ******************************************************************************/
 void display_lux(float light);
 

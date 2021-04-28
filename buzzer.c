@@ -8,6 +8,7 @@
 #include <buzzer.h>
 #include "main.h"
 
+// Notes for the Main Theme music
 Note_t Theme[] =
 {
      {NOTE_G6,ONE_QUARTER,true}, // SO
@@ -44,12 +45,14 @@ Note_t Theme[] =
      {SPACE,ONE_HALF, true},
 };
 
+// Notes for the shot music effect
 Note_t Shot[] =
 {
      {NOTE_G7S,ONE_EIGTH, true},
      {NOTE_A5,ONE_EIGTH, true},
 };
 
+// Notes for the hit music effect
 Note_t Hit[] =
 {
      {NOTE_A5,ONE_EIGTH, true},
@@ -107,7 +110,7 @@ void music_init(){
 }
 
 /******************************************************************************
- *
+ * Play the corresponding note in the theme music effect
  ******************************************************************************/
 static void music_theme(uint16_t note_index)
 {
@@ -130,7 +133,7 @@ static void music_theme(uint16_t note_index)
 }
 
 /******************************************************************************
- *
+ * Play the corresponding note in the shot music effect
  ******************************************************************************/
 static void music_shot(uint16_t note_index)
 {
@@ -153,7 +156,7 @@ static void music_shot(uint16_t note_index)
 }
 
 /******************************************************************************
- *
+ * Play the corresponding note in the hit music effect
  ******************************************************************************/
 static void music_hit(uint16_t note_index)
 {
@@ -176,19 +179,21 @@ static void music_hit(uint16_t note_index)
 }
 
 /******************************************************************************
- *
+ * Play the main theme song while shining the RGB LED corresponding to the rhythm
  ******************************************************************************/
 bool music_play_song_shine(void)
 {
     // loop through the struct to play the notes as the song.
     uint32_t i;
     for(i = 0; i < 30; i++){
-        if(S1_PRESSED || S2_PRESSED)
+        if(S1_PRESSED || S2_PRESSED)  // If either button on MKII has been pressed, return.
         {
             ece353_MKII_Buzzer_Off();
+            ece353_RGB_LED(false, false, false);
+            ece353_MKII_RGB_LED(false, false, false);
             return false;
         }
-
+        // Conditions to loop the RGB LED's color
         if (i % 3 == 0) {
             ece353_RGB_LED(true, false, false);
             ece353_MKII_RGB_LED(true, false, false);
@@ -201,18 +206,14 @@ bool music_play_song_shine(void)
             ece353_RGB_LED(false, false, true);
             ece353_MKII_RGB_LED(false, false, true);
         }
+        // Play the corresponding notes for Main Theme music.
         music_theme(i);
-        if (ece353_MKII_S1()){
-            ece353_RGB_LED(false, false, false);
-            ece353_MKII_RGB_LED(false, false, false);
-            break;
-        }
     }
     return true;
 }
 
 /******************************************************************************
- *
+ * Play the shot music effect
  ******************************************************************************/
 void music_play_shot(void)
 {
@@ -231,7 +232,7 @@ void music_play_shot(void)
 }
 
 /******************************************************************************
- *
+ * Play the hit music effect
  ******************************************************************************/
 void music_play_hit(void)
 {
@@ -240,7 +241,7 @@ void music_play_hit(void)
 }
 
 /******************************************************************************
- *
+ * Blink the RED RGB LED 3 times to indicate that the enemy has been hit.
  ******************************************************************************/
 void led_blink(void) {
     ece353_MKII_RGB_LED(true, false, false);

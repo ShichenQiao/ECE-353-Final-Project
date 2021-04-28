@@ -9,6 +9,8 @@
 #include "opt3001.h"
 #include "math.h"
 
+static int lux_threshold = 700;
+
 /******************************************************************************
  * Initialize the opt3001 ambient light sensor on the MKII. This function assumes
  * that the I2C interface has already been configured to operate at 100KHz.
@@ -21,7 +23,8 @@ void opt3001_init(void)
 }
 
 /******************************************************************************
- * Turn on BLUE RGB LED if the background color is to be black, else if it will be white, turn on the RED RGB LED.
+ * Turn on BLUE RGB LED if the background color is to be black, else if it will
+ * be white, turn on the RED RGB LED.
  ******************************************************************************/
 void display_lux(float light)
 {

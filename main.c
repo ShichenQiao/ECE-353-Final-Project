@@ -29,12 +29,16 @@ int main(void)
     // Enable interrupts
     __enable_irq();
 
+    xSemaphoreTake(Sem_Console, portMAX_DELAY);
+
     // Print welcome message
     printf("\n\r");
     printf("*********************************************\n\r");
     printf("* Welcome to BREAKER!\n\r");
     printf("*********************************************\n\r");
     printf("\n\r");
+
+    xSemaphoreGive(Sem_Console);
 
     // Home Page task
     xTaskCreate

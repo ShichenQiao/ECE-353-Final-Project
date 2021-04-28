@@ -22,8 +22,10 @@ int ball_dir;   // 0 for LEFT, 1 for RIGHT, 2 for UP, and 3 for DOWN
 // Shared global variable that stores the lux number read from opt3001
 float lux = 0.0;
 
-// Back ground color black, true means background color is black false is white.
-bool bgc_black = true;
+bool bgc_black = true;      // true when background is black, false when it is white
+
+// Background color, either black or white, default is black
+uint16_t background_color = LCD_COLOR_BLACK;
 
 // Shared coordinates of the tank
 uint8_t tank_x;

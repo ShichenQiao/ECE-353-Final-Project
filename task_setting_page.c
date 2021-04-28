@@ -24,6 +24,15 @@ void Task_Setting_Page(void *pvParameters)
         // Wait until entering setting mode from the home page
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
+        xSemaphoreTake(Sem_Console, portMAX_DELAY);
+
+        // Print Setting mode instructions
+        printf("\n\r");
+        printf("*** You are at the Setting Mode ***\n\r");
+        printf("\n\r");
+
+        xSemaphoreGive(Sem_Console);
+
         while(1)
         {
             // Draw the "SETTINGS" title to LCD
@@ -42,6 +51,9 @@ void Task_Setting_Page(void *pvParameters)
 
             // Set number of colors
             set_number_of_colors();
+
+            // Set background color
+            set_background();
 
             while(!S1_PRESSED && !S2_PRESSED){}
 
@@ -80,6 +92,18 @@ void Task_Setting_Page(void *pvParameters)
 void set_game_duration_seconds()
 {
     static int game_duration_helper = 3;        // 1 = 60s, 2 = 90s, ... 9 = 300s
+
+    xSemaphoreTake(Sem_Console, portMAX_DELAY);
+
+    // Print instructions
+    printf("\n\r");
+    printf("* You are now setting the game duration *\n\r");
+    printf("* Possible values are 60s, 90s, ... 300s *\n\r");
+    printf("* Press S1 to change game duration to its next value *\n\r");
+    printf("* Press S2 to go to next setting *\n\r");
+    printf("\n\r");
+
+    xSemaphoreGive(Sem_Console);
 
     while(1)
     {
@@ -192,6 +216,18 @@ void set_game_duration_seconds()
  ******************************************************************************/
 void set_number_of_colors()
 {
+    xSemaphoreTake(Sem_Console, portMAX_DELAY);
+
+    // Print instructions
+    printf("\n\r");
+    printf("* You are now setting the number of colors used in a BREAKER game *\n\r");
+    printf("* Possible values are 3 to 11 *\n\r");
+    printf("* Press S1 to change the number to its next value *\n\r");
+    printf("* Press S2 to go to next setting *\n\r");
+    printf("\n\r");
+
+    xSemaphoreGive(Sem_Console);
+
     while(1)
     {
         // Print "NUM OF COLORS" to LCD
@@ -287,3 +323,101 @@ void set_number_of_colors()
         }
     }
 }
+
+void set_background()
+{
+    uint16_t prev_bgc = LCD_COLOR_BLACK;
+    while(1)
+    {
+        // Wait until the S1 or S2 is pressed
+        // While waiting, refresh the LCD panel with respect to the lux reading.
+        while(!S1_PRESSED && !S2_PRESSED){
+            // Sets the global variable indicating the background color
+            set_bgc();
+
+            // Update global variable
+            if (bgc_black) {
+                background_color = LCD_COLOR_BLACK;
+            }
+            else {
+                background_color = LCD_COLOR_WHITE;
+            }
+
+            // Cover setting page with new background
+            lcd_draw_rectangle(
+              67,
+              67,
+              132,
+              132,
+              background_color
+            );
+
+//            // Re-draw the "BG Color" title to LCD, if needed
+//            if(prev_bgc != background_color)
+//            {
+                print_bgc();
+//                prev_bgc = background_color;
+//            }
+            // Wait 200 ms
+            vTaskDelay(pdMS_TO_TICKS(200));
+        }
+
+        if(S2_PRESSED)
+        {
+            S2_PRESSED = false;     // Reset S2
+
+            // Update global variable
+            if (bgc_black) {
+                background_color = LCD_COLOR_BLACK;
+            }
+            else {
+                background_color = LCD_COLOR_WHITE;
+            }
+
+            // Cover setting page with new background
+            lcd_draw_rectangle(
+              67,
+              67,
+              132,
+              132,
+              background_color
+            );
+
+            // Exit Setting mode
+            break;
+        }
+        else if(S1_PRESSED)
+        {
+            S1_PRESSED = false;     // Reset S1
+        }
+    }
+
+}
+
+void print_bgc() {
+    // Print "[S1] CHANGE" to LCD
+    lcd_print_char(20, 40, 'B');
+    lcd_print_char(28, 40, 'G');
+
+    lcd_print_char(70, 40, 'C');
+    lcd_print_char(78, 40, 'O');
+    lcd_print_char(86, 40, 'L');
+    lcd_print_char(94, 40, 'O');
+    lcd_print_char(102, 40, 'R');
+    lcd_print_char(110, 40, 'S');
+
+    // Print "[S2] CONFIRM" to LCD
+    lcd_print_char(20, 102, '[');
+    lcd_print_char(28, 102, 'S');
+    lcd_print_char(36, 102, '2');
+    lcd_print_char(44, 102, ']');
+
+    lcd_print_char(54, 102, 'C');
+    lcd_print_char(62, 102, 'O');
+    lcd_print_char(70, 102, 'N');
+    lcd_print_char(78, 102, 'F');
+    lcd_print_char(83, 102, 'I');
+    lcd_print_char(89, 102, 'R');
+    lcd_print_char(97, 102, 'M');
+}
+

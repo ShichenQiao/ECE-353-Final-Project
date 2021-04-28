@@ -19,6 +19,27 @@ void Task_Home_Page(void *pvParameters)
     // Never return
     while(1)
     {
+        xSemaphoreTake(Sem_Console, portMAX_DELAY);
+
+        // Print home page instructions
+        printf("\n\r");
+        printf("*** You are at the home page ***\n\r");
+        printf("\n\r");
+        printf("* Press S1 to start a new Game *\n\r");
+        printf("* Press S2 to go to settings *\n\r");
+        printf("\n\r");
+
+        xSemaphoreGive(Sem_Console);
+
+        // Cover home page
+        lcd_draw_rectangle(
+          67,
+          67,
+          132,
+          132,
+          background_color
+        );
+
         // Draw logo to LCD
         lcd_draw_image(
                 67,
@@ -27,7 +48,7 @@ void Task_Home_Page(void *pvParameters)
                 logoHeightPixels,
                 logoBitmaps,
                 LCD_COLOR_YELLOW,
-                LCD_COLOR_BLACK
+                background_color
         );
 
         // Print "[S1] NEW GAME" to LCD
@@ -68,7 +89,7 @@ void Task_Home_Page(void *pvParameters)
                 tankHeightPixels,
                 tank_leftBitmaps,
                 LCD_COLOR_BLUE,
-                LCD_COLOR_BLACK
+                background_color
         );
         lcd_draw_image(
                 20,
@@ -77,7 +98,7 @@ void Task_Home_Page(void *pvParameters)
                 ballHeightPixels,
                 image_ball,
                 LCD_COLOR_BLUE,
-                LCD_COLOR_BLACK
+                background_color
         );
         lcd_draw_image(
                 20,
@@ -86,7 +107,7 @@ void Task_Home_Page(void *pvParameters)
                 tankHeightPixels,
                 tank_rightBitmaps,
                 LCD_COLOR_GREEN,
-                LCD_COLOR_BLACK
+                background_color
         );
         lcd_draw_image(
                 65,
@@ -95,7 +116,7 @@ void Task_Home_Page(void *pvParameters)
                 ballHeightPixels,
                 image_ball,
                 LCD_COLOR_GREEN,
-                LCD_COLOR_BLACK
+                background_color
         );
         lcd_draw_image(
                 85,
@@ -104,7 +125,7 @@ void Task_Home_Page(void *pvParameters)
                 tankHeightPixels,
                 tank_upBitmaps,
                 LCD_COLOR_RED,
-                LCD_COLOR_BLACK
+                background_color
         );
         lcd_draw_image(
                 110,
@@ -113,7 +134,7 @@ void Task_Home_Page(void *pvParameters)
                 tankHeightPixels,
                 tank_downBitmaps,
                 LCD_COLOR_CYAN,
-                LCD_COLOR_BLACK
+                background_color
         );
 
         // Play theme song until S1 or S2 is pressed
@@ -130,7 +151,7 @@ void Task_Home_Page(void *pvParameters)
               67,
               132,
               132,
-              LCD_COLOR_BLACK
+              background_color
             );
 
             // Notify Task_Breaker to enter Gaming mode
@@ -149,7 +170,7 @@ void Task_Home_Page(void *pvParameters)
               67,
               132,
               132,
-              LCD_COLOR_BLACK
+              background_color
             );
 
             // Notify Task_Setting_Page to enter Setting mode

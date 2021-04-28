@@ -39,6 +39,11 @@ extern int tank_dir;   // 0 for LEFT, 1 for RIGHT, 2 for UP, and 3 for DOWN
 // Lux reading from the light sensor
 extern float lux;
 
+extern bool bgc_black;      // true when background is black, false when it is white
+
+// Background color, either black or white, default is black
+extern uint16_t background_color;
+
 // Matrix to record whether a pixel on the LCD is occupied
 extern bool occupied[LCD_VERTICAL_MAX][LCD_HORIZONTAL_MAX];
 
