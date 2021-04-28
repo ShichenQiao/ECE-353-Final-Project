@@ -273,7 +273,7 @@ void check_squares(int xk_1, int yk_1, int xk_2, int yk_2)
                 square_y_1,
                 12,
                 12,
-                LCD_COLOR_BLACK
+                background_color
             );
         }
 
@@ -286,7 +286,7 @@ void check_squares(int xk_1, int yk_1, int xk_2, int yk_2)
                 square_y_2,
                 12,
                 12,
-                LCD_COLOR_BLACK
+                background_color
             );
         }
 

@@ -41,15 +41,31 @@ void Task_Home_Page(void *pvParameters)
         );
 
         // Draw logo to LCD
-        lcd_draw_image(
-                67,
-                20,
-                logoWidthPixels,
-                logoHeightPixels,
-                logoBitmaps,
-                LCD_COLOR_YELLOW,
-                background_color
-        );
+        if(background_color == LCD_COLOR_BLACK)
+        {
+            lcd_draw_image(
+                    67,
+                    20,
+                    logoWidthPixels,
+                    logoHeightPixels,
+                    logoBitmaps,
+                    LCD_COLOR_YELLOW,
+                    background_color
+            );
+        }
+        else
+        {
+            lcd_draw_image(
+                    67,
+                    20,
+                    logoWidthPixels,
+                    logoHeightPixels,
+                    logoBitmaps,
+                    LCD_COLOR_BLUE,
+                    background_color
+            );
+        }
+
 
         // Print "[S1] NEW GAME" to LCD
         lcd_print_char(20, 50, '[');

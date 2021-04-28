@@ -83,7 +83,7 @@ void reset_game()
       LCD_VERTICAL_MAX / 2,
       LCD_HORIZONTAL_MAX,
       LCD_VERTICAL_MAX,
-      LCD_COLOR_BLACK
+      background_color
     );
 
     xSemaphoreGive(Sem_LCD);
@@ -134,7 +134,7 @@ void reset_game()
             tankHeightPixels,
             tank_upBitmaps,
             tank_lcd_color,
-            LCD_COLOR_BLACK
+            background_color
     );
 
     // Draw boarders on LCD
@@ -206,7 +206,7 @@ void Task_Breaker(void *pvParameters)
               67,
               84,
               54,
-              LCD_COLOR_BLACK
+              background_color
             );
 
             // Set flag showing a game is on going
@@ -269,7 +269,7 @@ void Task_Breaker(void *pvParameters)
                                 tankHeightPixels,
                                 tank_leftBitmaps,
                                 tank_lcd_color,
-                                LCD_COLOR_BLACK
+                                background_color
                         );
 
                         xSemaphoreGive(Sem_LCD);
@@ -306,7 +306,7 @@ void Task_Breaker(void *pvParameters)
                                 tankHeightPixels,
                                 tank_rightBitmaps,
                                 tank_lcd_color,
-                                LCD_COLOR_BLACK
+                                background_color
                         );
 
                         xSemaphoreGive(Sem_LCD);
@@ -343,7 +343,7 @@ void Task_Breaker(void *pvParameters)
                                 tankHeightPixels,
                                 tank_downBitmaps,
                                 tank_lcd_color,
-                                LCD_COLOR_BLACK
+                                background_color
                         );
 
                         xSemaphoreGive(Sem_LCD);
@@ -380,7 +380,7 @@ void Task_Breaker(void *pvParameters)
                                 tankHeightPixels,
                                 tank_upBitmaps,
                                 tank_lcd_color,
-                                LCD_COLOR_BLACK
+                                background_color
                         );
 
                         xSemaphoreGive(Sem_LCD);
@@ -470,8 +470,8 @@ void Task_Breaker(void *pvParameters)
                                 ballWidthPixels,
                                 ballHeightPixels,
                                 image_ball,
-                                LCD_COLOR_BLACK,
-                                LCD_COLOR_BLACK
+                                background_color,
+                                background_color
                         );
                         // Re-draw the ball at its new position
                         lcd_draw_image(
@@ -481,7 +481,7 @@ void Task_Breaker(void *pvParameters)
                                 ballHeightPixels,
                                 image_ball,
                                 tank_lcd_color,
-                                LCD_COLOR_BLACK
+                                background_color
                         );
 
                         xSemaphoreGive(Sem_LCD);
@@ -530,7 +530,7 @@ void Task_Breaker(void *pvParameters)
           67,
           132,
           132,
-          LCD_COLOR_BLACK
+          background_color
         );
 
         // Go back to home page
@@ -555,8 +555,8 @@ void ball_reset(void)
             ballWidthPixels,
             ballHeightPixels,
             image_ball,
-            LCD_COLOR_BLACK,
-            LCD_COLOR_BLACK
+            background_color,
+            background_color
     );
 
     xSemaphoreGive(Sem_LCD);
@@ -589,7 +589,7 @@ void tank_recover()
                     tankHeightPixels,
                     tank_leftBitmaps,
                     tank_lcd_color,
-                    LCD_COLOR_BLACK
+                    background_color
             );
             break;
         }
@@ -602,7 +602,7 @@ void tank_recover()
                     tankHeightPixels,
                     tank_rightBitmaps,
                     tank_lcd_color,
-                    LCD_COLOR_BLACK
+                    background_color
             );
             break;
         }
@@ -615,7 +615,7 @@ void tank_recover()
                     tankHeightPixels,
                     tank_upBitmaps,
                     tank_lcd_color,
-                    LCD_COLOR_BLACK
+                    background_color
             );
             break;
         }
@@ -628,7 +628,7 @@ void tank_recover()
                     tankHeightPixels,
                     tank_downBitmaps,
                     tank_lcd_color,
-                    LCD_COLOR_BLACK
+                    background_color
             );
             break;
         }
@@ -655,7 +655,7 @@ void print_pre_game_message()
       67,
       80,
       50,
-      LCD_COLOR_BLACK
+      background_color
     );
 
     // Print "WELCOME" to the top row of the box
@@ -711,7 +711,7 @@ void print_end_game_message()
       67,
       80,
       50,
-      LCD_COLOR_BLACK
+      background_color
     );
 
     // Print "GAME OVER!" to the top row of the box
@@ -762,7 +762,7 @@ void print_end_game_message()
           85,
           10,
           10,
-          LCD_COLOR_BLACK
+          background_color
         );
 
         // Print the count down
@@ -779,7 +779,7 @@ void print_end_game_message()
       85,
       80,
       10,
-      LCD_COLOR_BLACK
+      background_color
     );
 
     // Print "[S1] RESET" to LCD

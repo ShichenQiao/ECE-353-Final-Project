@@ -36,15 +36,30 @@ void Task_Setting_Page(void *pvParameters)
         while(1)
         {
             // Draw the "SETTINGS" title to LCD
-            lcd_draw_image(
-                    67,
-                    20,
-                    titleWidthPixels,
-                    titleHeightPixels,
-                    titleBitmaps,
-                    LCD_COLOR_YELLOW,
-                    LCD_COLOR_BLACK
-            );
+            if(background_color == LCD_COLOR_BLACK)
+            {
+                lcd_draw_image(
+                        67,
+                        20,
+                        titleWidthPixels,
+                        titleHeightPixels,
+                        titleBitmaps,
+                        LCD_COLOR_YELLOW,
+                        background_color
+                );
+            }
+            else
+            {
+                lcd_draw_image(
+                        67,
+                        20,
+                        titleWidthPixels,
+                        titleHeightPixels,
+                        titleBitmaps,
+                        LCD_COLOR_BLUE,
+                        background_color
+                );
+            }
 
             // Set game duration in seconds
             set_game_duration_seconds();
@@ -67,7 +82,7 @@ void Task_Setting_Page(void *pvParameters)
                   67,
                   132,
                   132,
-                  LCD_COLOR_BLACK
+                  background_color
                 );
 
                 // Exit Setting mode
@@ -158,7 +173,7 @@ void set_game_duration_seconds()
           55,
           30,
           15,
-          LCD_COLOR_BLACK
+          background_color
         );
 
         // Print current duration of game to LCD
@@ -201,7 +216,7 @@ void set_game_duration_seconds()
               60,
               100,
               50,
-              LCD_COLOR_BLACK
+              background_color
             );
 
             break;      // Go to next setting
@@ -281,7 +296,7 @@ void set_number_of_colors()
           55,
           30,
           15,
-          LCD_COLOR_BLACK
+          background_color
         );
 
         // Print current number of colors to LCD
@@ -316,7 +331,7 @@ void set_number_of_colors()
               50,
               100,
               30,
-              LCD_COLOR_BLACK
+              background_color
             );
 
             break;      // Go to next setting
@@ -324,9 +339,36 @@ void set_number_of_colors()
     }
 }
 
+/******************************************************************************
+ *
+ ******************************************************************************/
 void set_background()
 {
-    uint16_t prev_bgc = LCD_COLOR_BLACK;
+    // Print "[S1] CHANGE" to LCD
+    lcd_print_char(20, 40, 'B');
+    lcd_print_char(28, 40, 'G');
+
+    lcd_print_char(70, 40, 'C');
+    lcd_print_char(78, 40, 'O');
+    lcd_print_char(86, 40, 'L');
+    lcd_print_char(94, 40, 'O');
+    lcd_print_char(102, 40, 'R');
+    lcd_print_char(110, 40, 'S');
+
+    // Print "[S2] CONFIRM" to LCD
+    lcd_print_char(20, 102, '[');
+    lcd_print_char(28, 102, 'S');
+    lcd_print_char(36, 102, '2');
+    lcd_print_char(44, 102, ']');
+
+    lcd_print_char(54, 102, 'C');
+    lcd_print_char(62, 102, 'O');
+    lcd_print_char(70, 102, 'N');
+    lcd_print_char(78, 102, 'F');
+    lcd_print_char(83, 102, 'I');
+    lcd_print_char(89, 102, 'R');
+    lcd_print_char(97, 102, 'M');
+
     while(1)
     {
         // Wait until the S1 or S2 is pressed
@@ -352,20 +394,12 @@ void set_background()
               background_color
             );
 
-//            // Re-draw the "BG Color" title to LCD, if needed
-//            if(prev_bgc != background_color)
-//            {
-                print_bgc();
-//                prev_bgc = background_color;
-//            }
             // Wait 200 ms
             vTaskDelay(pdMS_TO_TICKS(200));
         }
 
         if(S2_PRESSED)
         {
-            S2_PRESSED = false;     // Reset S2
-
             // Update global variable
             if (bgc_black) {
                 background_color = LCD_COLOR_BLACK;
@@ -373,15 +407,6 @@ void set_background()
             else {
                 background_color = LCD_COLOR_WHITE;
             }
-
-            // Cover setting page with new background
-            lcd_draw_rectangle(
-              67,
-              67,
-              132,
-              132,
-              background_color
-            );
 
             // Exit Setting mode
             break;
@@ -393,31 +418,3 @@ void set_background()
     }
 
 }
-
-void print_bgc() {
-    // Print "[S1] CHANGE" to LCD
-    lcd_print_char(20, 40, 'B');
-    lcd_print_char(28, 40, 'G');
-
-    lcd_print_char(70, 40, 'C');
-    lcd_print_char(78, 40, 'O');
-    lcd_print_char(86, 40, 'L');
-    lcd_print_char(94, 40, 'O');
-    lcd_print_char(102, 40, 'R');
-    lcd_print_char(110, 40, 'S');
-
-    // Print "[S2] CONFIRM" to LCD
-    lcd_print_char(20, 102, '[');
-    lcd_print_char(28, 102, 'S');
-    lcd_print_char(36, 102, '2');
-    lcd_print_char(44, 102, ']');
-
-    lcd_print_char(54, 102, 'C');
-    lcd_print_char(62, 102, 'O');
-    lcd_print_char(70, 102, 'N');
-    lcd_print_char(78, 102, 'F');
-    lcd_print_char(83, 102, 'I');
-    lcd_print_char(89, 102, 'R');
-    lcd_print_char(97, 102, 'M');
-}
-

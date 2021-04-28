@@ -121,7 +121,7 @@ void Task_Timer(void *pvParameters)
                                 tankHeightPixels,
                                 tank_leftBitmaps,
                                 tank_lcd_color,
-                                LCD_COLOR_BLACK
+                                background_color
                         );
                         break;
                     }
@@ -134,7 +134,7 @@ void Task_Timer(void *pvParameters)
                                 tankHeightPixels,
                                 tank_rightBitmaps,
                                 tank_lcd_color,
-                                LCD_COLOR_BLACK
+                                background_color
                         );
                         break;
                     }
@@ -147,7 +147,7 @@ void Task_Timer(void *pvParameters)
                                 tankHeightPixels,
                                 tank_upBitmaps,
                                 tank_lcd_color,
-                                LCD_COLOR_BLACK
+                                background_color
                         );
                         break;
                     }
@@ -160,7 +160,7 @@ void Task_Timer(void *pvParameters)
                                 tankHeightPixels,
                                 tank_downBitmaps,
                                 tank_lcd_color,
-                                LCD_COLOR_BLACK
+                                background_color
                         );
                         break;
                     }

@@ -43,7 +43,7 @@ void score_board_reset()
       10,
       30,
       10,
-      LCD_COLOR_BLACK
+      background_color
     );
 
     xSemaphoreGive(Sem_LCD);
@@ -84,7 +84,7 @@ void Task_Score_Board(void *pvParameters)
               10,
               30,
               10,
-              LCD_COLOR_BLACK
+              background_color
             );
 
             xSemaphoreGive(Sem_LCD);
@@ -157,7 +157,7 @@ void update_score(){
       10,
       30,
       10,
-      LCD_COLOR_BLACK
+      background_color
     );
 
     xSemaphoreGive(Sem_LCD);
