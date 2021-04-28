@@ -340,7 +340,8 @@ void set_number_of_colors()
 }
 
 /******************************************************************************
- *
+ * Adjust the background color with respect to the ambient light sensor's reading
+ * Press button S2 to confirm setting.
  ******************************************************************************/
 void set_background()
 {
