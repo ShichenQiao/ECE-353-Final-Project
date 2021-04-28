@@ -28,8 +28,10 @@
 
 /* Image data */
 #include <ball.h>
+#include <buzzer.h>
 #include <font_arial.h>
 #include <tank.h>
+#include <logo.h>
 
 /* FreeRTOS Tasks */
 #include <task_accelerometer.h>
@@ -38,7 +40,6 @@
 #include <task_enemy.h>
 #include <task_score_board.h>
 #include <task_timer.h>
-#include <task_buzzer.h>
 #include <task_home_page.h>
 #include <task_setting_page.h>
 

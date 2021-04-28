@@ -10,42 +10,116 @@
 TaskHandle_t Task_Home_Page_Handle;
 
 /******************************************************************************
- *
+ * Home page of the game BREAKER. Plays theme song with LED flashing.
+ * Press S1 to go to Gaming mode.
+ * Press S2 to go to Setting mode.
  ******************************************************************************/
 void Task_Home_Page(void *pvParameters)
 {
+    // Never return
     while(1)
     {
-        // Print "[S1] BEGIN" to LCD
-        lcd_print_char(15, 73, '[');
-        lcd_print_char(23, 73, 'S');
-        lcd_print_char(31, 73, '1');
-        lcd_print_char(39, 73, ']');
+        // Draw logo to LCD
+        lcd_draw_image(
+                67,
+                20,
+                logoWidthPixels,
+                logoHeightPixels,
+                logoBitmaps,
+                LCD_COLOR_YELLOW,
+                LCD_COLOR_BLACK
+        );
 
-        lcd_print_char(49, 73, 'N');
-        lcd_print_char(57, 73, 'E');
-        lcd_print_char(65, 73, 'W');
-        lcd_print_char(73, 73, 'G');
-        lcd_print_char(81, 73, 'A');
-        lcd_print_char(89, 73, 'M');
-        lcd_print_char(97, 73, 'E');
+        // Print "[S1] NEW GAME" to LCD
+        lcd_print_char(20, 50, '[');
+        lcd_print_char(28, 50, 'S');
+        lcd_print_char(36, 50, '1');
+        lcd_print_char(44, 50, ']');
 
-        // Print "[S2] HOME" to LCD
-        lcd_print_char(15, 85, '[');
-        lcd_print_char(23, 85, 'S');
-        lcd_print_char(31, 85, '2');
-        lcd_print_char(39, 85, ']');
+        lcd_print_char(51, 50, 'N');
+        lcd_print_char(58, 50, 'E');
+        lcd_print_char(68, 50, 'W');
 
-        lcd_print_char(49, 85, 'S');
-        lcd_print_char(57, 85, 'E');
-        lcd_print_char(65, 85, 'T');
-        lcd_print_char(73, 85, 'T');
-        lcd_print_char(81, 85, 'I');
-        lcd_print_char(89, 85, 'N');
-        lcd_print_char(97, 85, 'G');
+        lcd_print_char(82, 50, 'G');
+        lcd_print_char(90, 50, 'A');
+        lcd_print_char(98, 50, 'M');
+        lcd_print_char(106, 50, 'E');
 
-        while(!S1_PRESSED && !S2_PRESSED){}
+        // Print "[S2] SETTINGS" to LCD
+        lcd_print_char(20, 62, '[');
+        lcd_print_char(28, 62, 'S');
+        lcd_print_char(36, 62, '2');
+        lcd_print_char(44, 62, ']');
 
+        lcd_print_char(51, 62, 'S');
+        lcd_print_char(59, 62, 'E');
+        lcd_print_char(67, 62, 'T');
+        lcd_print_char(74, 62, 'T');
+        lcd_print_char(79, 62, 'I');
+        lcd_print_char(86, 62, 'N');
+        lcd_print_char(95, 62, 'G');
+        lcd_print_char(104, 62, 'S');
+
+        // Draw background
+        lcd_draw_image(
+                55,
+                100,
+                tankWidthPixels,
+                tankHeightPixels,
+                tank_leftBitmaps,
+                LCD_COLOR_BLUE,
+                LCD_COLOR_BLACK
+        );
+        lcd_draw_image(
+                20,
+                100,
+                ballWidthPixels,
+                ballHeightPixels,
+                image_ball,
+                LCD_COLOR_BLUE,
+                LCD_COLOR_BLACK
+        );
+        lcd_draw_image(
+                20,
+                80,
+                tankWidthPixels,
+                tankHeightPixels,
+                tank_rightBitmaps,
+                LCD_COLOR_GREEN,
+                LCD_COLOR_BLACK
+        );
+        lcd_draw_image(
+                65,
+                80,
+                ballWidthPixels,
+                ballHeightPixels,
+                image_ball,
+                LCD_COLOR_GREEN,
+                LCD_COLOR_BLACK
+        );
+        lcd_draw_image(
+                85,
+                110,
+                tankWidthPixels,
+                tankHeightPixels,
+                tank_upBitmaps,
+                LCD_COLOR_RED,
+                LCD_COLOR_BLACK
+        );
+        lcd_draw_image(
+                110,
+                90,
+                tankWidthPixels,
+                tankHeightPixels,
+                tank_downBitmaps,
+                LCD_COLOR_CYAN,
+                LCD_COLOR_BLACK
+        );
+
+        // Play theme song until S1 or S2 is pressed
+        while(music_play_song_shine()){}
+
+        // If S1 was pressed, go to Gaming mode
         if(S1_PRESSED)
         {
             S1_PRESSED = false;     // Reset S1
@@ -65,7 +139,7 @@ void Task_Home_Page(void *pvParameters)
             // Wait until re-entry to home page
             ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
         }
-        else if(S2_PRESSED)
+        else if(S2_PRESSED)     // If S2 was pressed, go to Setting mode
         {
             S2_PRESSED = false;     // Reset S2
 

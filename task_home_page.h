@@ -13,7 +13,9 @@
 extern TaskHandle_t Task_Home_Page_Handle;
 
 /******************************************************************************
- *
+ * Home page of the game BREAKER. Plays theme song with LED flashing.
+ * Press S1 to go to Gaming mode.
+ * Press S2 to go to Setting mode.
  ******************************************************************************/
 void Task_Home_Page(void *pvParameters);
 

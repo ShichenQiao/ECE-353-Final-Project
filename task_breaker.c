@@ -188,6 +188,8 @@ void Task_Breaker(void *pvParameters)
             // Play theme song until S1 or S2 is pressed
             while(music_play_song_shine()){}
 
+            S1_PRESSED = false;     // Reset S1
+
             // If S2 pressed, exit Gaming mode
             if(S2_PRESSED)
             {
@@ -557,6 +559,7 @@ void ball_reset(void)
 
     xSemaphoreGive(Sem_LCD);
 
+    // Re-draw the tank to make sure it's not covered
     tank_recover();
 
     // Update the position of the ball according to the tank
