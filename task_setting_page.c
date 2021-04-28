@@ -21,13 +21,14 @@ void Task_Setting_Page(void *pvParameters)
 
         while(1)
         {
-            lcd_print_char(49, 73, 'S');
-            lcd_print_char(57, 73, 'E');
-            lcd_print_char(65, 73, 'T');
-            lcd_print_char(73, 73, 'T');
-            lcd_print_char(81, 73, 'I');
-            lcd_print_char(89, 73, 'N');
-            lcd_print_char(97, 73, 'G');
+            lcd_print_char(51, 62, 'S');
+            lcd_print_char(59, 62, 'E');
+            lcd_print_char(67, 62, 'T');
+            lcd_print_char(74, 62, 'T');
+            lcd_print_char(79, 62, 'I');
+            lcd_print_char(86, 62, 'N');
+            lcd_print_char(95, 62, 'G');
+            lcd_print_char(104, 62, 'S');
 
             while(!S1_PRESSED && !S2_PRESSED){}
 

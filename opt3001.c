@@ -10,10 +10,9 @@
 #include "math.h"
 
 /******************************************************************************
- * Initialize the opt3001 ambient light sensor on the MKII.  This function assumes
+ * Initialize the opt3001 ambient light sensor on the MKII. This function assumes
  * that the I2C interface has already been configured to operate at 100KHz.
  ******************************************************************************/
-
 void opt3001_init(void)
 {
     // Initialize OPT3001
@@ -23,7 +22,9 @@ void opt3001_init(void)
 
 }
 
-// tester function that checks the reutrn value from opt3001
+/******************************************************************************
+ *
+ ******************************************************************************/
 void display_lux(float light)
 {
 //    if(light < 200.0)
@@ -49,7 +50,7 @@ void display_lux(float light)
 }
 
 /******************************************************************************
- * Set the background color by examining the lux
+ * Set the background color by examining the lux.
  ******************************************************************************/
 void set_bgc(void)
 {
@@ -63,8 +64,8 @@ void set_bgc(void)
 }
 
 /******************************************************************************
- * Returns the current ambient light in lux
- *  ******************************************************************************/
+ * Returns the current ambient light in lux.
+ *******************************************************************************/
 float opt3001_read_lux(void)
 {
     // Read the Result register of OPT3001 and convert into Lux, then return.

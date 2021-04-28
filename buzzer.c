@@ -55,9 +55,9 @@ Note_t Hit[] =
      {NOTE_A5,ONE_EIGTH, true},
 };
 
-//***************************************************************
-// This function returns how long an individual  notes is played
-//***************************************************************
+/******************************************************************************
+ * This function returns how long an individual notes is played.
+ ******************************************************************************/
 uint32_t music_get_time_delay(measure_time_t time)
 {
     uint32_t time_return = 0;
@@ -97,30 +97,18 @@ uint32_t music_get_time_delay(measure_time_t time)
 
 }
 
-// initialize the buzzer ports
+/******************************************************************************
+ * Initialize the buzzer ports.
+ ******************************************************************************/
 void music_init(){
     P2->DIR |= BIT7;
     P2->REN |= BIT7;
     P2->OUT |= BIT7;
 }
-//***************************************************************************
-// Plays a single note of the song based on note_index.  After
-// the note is played, there is an optional delay in between
-// notes.
-//
-// Examples
-// Song[note_index].period       -- Used to determine the period of the
-//                                  PWM pulse.
-//
-// Song[note_index].time         -- 1/4 or 1/2 time note.  Call
-//                                  music_get_time_delay() to determine how
-//                                  long to play the note
-//
-// Song[note_index].delay        -- If true, add a period of silence for
-//                                  DELAY_AMOUNT
-//
-//                                  If false, return without delaying.
-//*************************************************************************
+
+/******************************************************************************
+ *
+ ******************************************************************************/
 static void music_theme(uint16_t note_index)
 {
     // Set the delay time variable for later use
@@ -141,6 +129,9 @@ static void music_theme(uint16_t note_index)
     }
 }
 
+/******************************************************************************
+ *
+ ******************************************************************************/
 static void music_shot(uint16_t note_index)
 {
     // Set the delay time variable for later use
@@ -161,6 +152,9 @@ static void music_shot(uint16_t note_index)
     }
 }
 
+/******************************************************************************
+ *
+ ******************************************************************************/
 static void music_hit(uint16_t note_index)
 {
     // Set the delay time variable for later use
@@ -181,10 +175,9 @@ static void music_hit(uint16_t note_index)
     }
 }
 
-//***************************************************************
-// Plays the song (loop through, playing each note)
-// and then returns
-//***************************************************************
+/******************************************************************************
+ *
+ ******************************************************************************/
 bool music_play_song_shine(void)
 {
     // loop through the struct to play the notes as the song.
@@ -218,6 +211,9 @@ bool music_play_song_shine(void)
     return true;
 }
 
+/******************************************************************************
+ *
+ ******************************************************************************/
 void music_play_shot(void)
 {
     // loop through the struct to play the notes as the song.
@@ -234,12 +230,18 @@ void music_play_shot(void)
     ece353_MKII_RGB_LED(false, false, false);
 }
 
+/******************************************************************************
+ *
+ ******************************************************************************/
 void music_play_hit(void)
 {
     // loop through the struct to play the notes as the song.
     music_hit(0);
 }
 
+/******************************************************************************
+ *
+ ******************************************************************************/
 void led_blink(void) {
     ece353_MKII_RGB_LED(true, false, false);
     vTaskDelay(pdMS_TO_TICKS(25));
