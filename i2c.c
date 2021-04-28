@@ -100,7 +100,7 @@ static __inline void i2c_wait_busy(void)
 }
 
 /**********************************************************************************************
- *
+ * Clear all i2c generated interrupts
  **********************************************************************************************/
 static __inline void i2c_clear_interrupts(void)
 {
@@ -108,7 +108,7 @@ static __inline void i2c_clear_interrupts(void)
 }
 
 /**********************************************************************************************
- *
+ * Initialize all ports and pins needed for i2c bus
  **********************************************************************************************/
 void i2c_init(void)
 {
@@ -132,7 +132,7 @@ void i2c_init(void)
 
 
 /**********************************************************************************************
- *
+ * Write 16 bits data into i2c bus
  **********************************************************************************************/
 void i2c_write_16(uint8_t slave_address, uint8_t dev_address, uint16_t data)
 {
@@ -181,7 +181,7 @@ void i2c_write_16(uint8_t slave_address, uint8_t dev_address, uint16_t data)
 }
 
 /**********************************************************************************************
- *
+ * Read 16 bits data from i2c bus
  **********************************************************************************************/
 uint16_t i2c_read_16(uint8_t slave_address, uint8_t dev_address)
 {
@@ -235,6 +235,3 @@ uint16_t i2c_read_16(uint8_t slave_address, uint8_t dev_address)
     return ((uint16_t)(upper_byte) << 8) | lower_byte;
 
 }
-
-
-
