@@ -8,7 +8,7 @@
 #ifndef __TASK_SCORE_BOARD_H__
 #define __TASK_SCORE_BOARD_H__
 
-#include <main.h>
+#include "main.h"
 
 extern TaskHandle_t Task_Score_Board_Handle;
 

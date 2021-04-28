@@ -2,13 +2,13 @@
  * task_breaker.h
  *
  *  Created on: Apr 10, 2021
- *      Author: Justin Qiao
+ *      Author: Justin Qiao, Mark Xia
  */
 
 #ifndef __TASK_BREAKER_H__
 #define __TASK_BREAKER_H__
 
-#include <main.h>
+#include "main.h"
 
 // All possible commands to Queue_Breaker
 typedef enum {

@@ -2,7 +2,7 @@
  * main.h
  *
  *  Created on: Apr 10, 2021
- *      Author: Justin Qiao
+ *      Author: Justin Qiao, Mark Xia
  */
 
 #ifndef __MAIN_H__
@@ -22,16 +22,16 @@
 
 /* ECE353 Includes */
 #include <ece353.h>
-#include "opt3001.h"
-#include "i2c.h"
+#include <i2c.h>
 #include <lcd.h>
+#include <opt3001.h>
 
 /* Image data */
 #include <ball.h>
 #include <buzzer.h>
 #include <font_arial.h>
-#include <tank.h>
 #include <logo.h>
+#include <tank.h>
 #include <title.h>
 
 /* FreeRTOS Tasks */
@@ -39,10 +39,9 @@
 #include <task_breaker.h>
 #include <task_console.h>
 #include <task_enemy.h>
-#include <task_score_board.h>
-#include <task_timer.h>
 #include <task_home_page.h>
+#include <task_score_board.h>
 #include <task_setting_page.h>
-
+#include <task_timer.h>
 
 #endif /* __MAIN_H__ */

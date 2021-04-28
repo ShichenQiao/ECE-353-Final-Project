@@ -2,9 +2,7 @@
  * lcd.c
  *
  *  Created on: Sep 11, 2020
- *      Author: Joe Krachey
- *
- *  Student Name: Justin Qiao
+ *      Author: Joe Krachey, Justin Qiao
  */
 
 #include "main.h"

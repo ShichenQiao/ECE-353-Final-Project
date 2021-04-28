@@ -2,7 +2,7 @@
  * task_timer.h
  *
  *  Created on: Apr 10, 2021
- *      Author: Justin Qiao
+ *      Author: Justin Qiao, Mark Xia
  */
 
 #ifndef __TASK_TIMER_H__

@@ -2,10 +2,10 @@
  * task_breaker.c
  *
  *  Created on: Apr 10, 2021
- *      Author: Justin Qiao
+ *      Author: Justin Qiao, Mark Xia
  */
 
-#include <main.h>
+#include "main.h"
 
 #define QUEUE_LEN  10
 

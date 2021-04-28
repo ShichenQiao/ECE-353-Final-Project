@@ -2,7 +2,7 @@
  * task_setting_page.h
  *
  *  Created on: Apr 27, 2021
- *      Author: Justin Qiao
+ *      Author: Justin Qiao, Mark Xia
  */
 
 #ifndef __TASK_SETTING_PAGE_H__

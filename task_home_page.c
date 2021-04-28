@@ -2,10 +2,10 @@
  * task_home_page.c
  *
  *  Created on: Apr 27, 2021
- *      Author: Justin Qiao
+ *      Author: Justin Qiao, Mark Xia
  */
 
-#include <main.h>
+#include "main.h"
 
 TaskHandle_t Task_Home_Page_Handle;
 

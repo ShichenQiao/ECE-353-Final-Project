@@ -2,7 +2,7 @@
  * main.c
  *
  *  Created on: Apr 10, 2021
- *      Author: Justin Qiao
+ *      Author: Justin Qiao, Mark Xia
  */
 
 #include "main.h"

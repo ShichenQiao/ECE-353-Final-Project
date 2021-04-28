@@ -2,15 +2,13 @@
  * lcd.h
  *
  *  Created on: Sep 11, 2020
- *      Author: Joe Krachey
- *
- *  Student Name: Justin Qiao
+ *      Author: Joe Krachey, Justin Qiao
  */
 
 #include "msp.h"
 
-#ifndef LCD_H_
-#define LCD_H_
+#ifndef __LCD_H__
+#define __LCD_H__
 
 #define LCD_SCK_PORT    P1
 #define LCD_SCK_PIN     BIT5
@@ -142,4 +140,4 @@ void lcd_print_char(uint16_t x, uint16_t y, char c);
  ******************************************************************************/
 void lcd_get_draw_frame(int x, int y, int image_width_pixels, int image_height_pixels, int *x0, int *x1, int *y0, int *y1);
 
-#endif /* LCD_H_ */
+#endif /* __LCD_H__ */
