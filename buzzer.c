@@ -8,6 +8,7 @@
 #include <buzzer.h>
 #include "main.h"
 
+// The notes of the theme music.
 Note_t Theme[] =
 {
      {NOTE_G6,ONE_QUARTER,true}, // SO
@@ -44,12 +45,14 @@ Note_t Theme[] =
      {SPACE,ONE_HALF, true},
 };
 
+// The notes for the Shot music effect
 Note_t Shot[] =
 {
      {NOTE_G7S,ONE_EIGTH, true},
      {NOTE_A5,ONE_EIGTH, true},
 };
 
+// The notes of the Hit music effect
 Note_t Hit[] =
 {
      {NOTE_A5,ONE_EIGTH, true},
@@ -107,7 +110,7 @@ void music_init(){
 }
 
 /******************************************************************************
- *
+ * This function plays the indicated note from the Theme notes struct
  ******************************************************************************/
 static void music_theme(uint16_t note_index)
 {
@@ -130,7 +133,7 @@ static void music_theme(uint16_t note_index)
 }
 
 /******************************************************************************
- *
+ * This function plays the indicated note from the Shot notes struct
  ******************************************************************************/
 static void music_shot(uint16_t note_index)
 {
@@ -153,7 +156,7 @@ static void music_shot(uint16_t note_index)
 }
 
 /******************************************************************************
- *
+ * This function plays the indicated note from the Hit notes struct
  ******************************************************************************/
 static void music_hit(uint16_t note_index)
 {
@@ -176,7 +179,7 @@ static void music_hit(uint16_t note_index)
 }
 
 /******************************************************************************
- *
+ * This function plays Theme music while shining the RGB LED with the rhythm
  ******************************************************************************/
 bool music_play_song_shine(void)
 {
@@ -185,24 +188,29 @@ bool music_play_song_shine(void)
     for(i = 0; i < 30; i++){
         if(S1_PRESSED || S2_PRESSED)
         {
+             // If either button has been pressed, turn off the buzzer
             ece353_MKII_Buzzer_Off();
             return false;
         }
 
         if (i % 3 == 0) {
+             // Turn on the RED RGB LED on both MKII and MSP432
             ece353_RGB_LED(true, false, false);
             ece353_MKII_RGB_LED(true, false, false);
         }
         else if (i % 3 == 1) {
+             // Turn on the GREEN RGB LED on both MKII and MSP432
             ece353_RGB_LED(false, true, false);
             ece353_MKII_RGB_LED(false, true, false);
         }
         else if (i % 3 == 2) {
+             // Turn on the BLUE RGB LED on both MKII and MSP432
             ece353_RGB_LED(false, false, true);
             ece353_MKII_RGB_LED(false, false, true);
         }
         music_theme(i);
         if (ece353_MKII_S1()){
+             // If the button S1 has been pressed, turn off the RGB LED
             ece353_RGB_LED(false, false, false);
             ece353_MKII_RGB_LED(false, false, false);
             break;
@@ -212,7 +220,7 @@ bool music_play_song_shine(void)
 }
 
 /******************************************************************************
- *
+ * This function plays the shot music effect while turning on the white RGB LED indicating that the shot has been fired
  ******************************************************************************/
 void music_play_shot(void)
 {
@@ -220,6 +228,7 @@ void music_play_shot(void)
     uint32_t i;
     for(i = 0; i < 2; i++){
         if (i == 0) {
+             // Turns on the white RGB LED when playing the music
             ece353_MKII_RGB_LED(true, true, true);
         }
         else if (i == 1) {
@@ -231,7 +240,7 @@ void music_play_shot(void)
 }
 
 /******************************************************************************
- *
+ * This function plays the hit music effect
  ******************************************************************************/
 void music_play_hit(void)
 {
@@ -240,11 +249,14 @@ void music_play_hit(void)
 }
 
 /******************************************************************************
- *
+ * This function blinks the RED RGB LED 3 times.
  ******************************************************************************/
 void led_blink(void) {
+     // Turn on the RED RGB LED
     ece353_MKII_RGB_LED(true, false, false);
+     // Hold the RED RGB LED for 25 ms.
     vTaskDelay(pdMS_TO_TICKS(25));
+     // Turn off the RED RGB LED
     ece353_MKII_RGB_LED(false, false, false);
     vTaskDelay(pdMS_TO_TICKS(25));
     ece353_MKII_RGB_LED(true, false, false);
