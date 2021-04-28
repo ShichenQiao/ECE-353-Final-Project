@@ -16,29 +16,16 @@
 void opt3001_init(void)
 {
     // Initialize OPT3001
-    /* ADD CODE */
     //reset the device using config reg -- data
     i2c_write_16(OPT3001_SLAVE_ADDRESS, CONFIG_REG, 0xC600);
 
 }
 
 /******************************************************************************
- *
+ * Turn on the BLUE RGB LED if the lux is lower the 500
  ******************************************************************************/
 void display_lux(float light)
 {
-//    if(light < 200.0)
-//    {
-//        ece353_MKII_RGB_LED(false, false, true); // turn on BLUE
-//    }
-//    else if (light < 500.0)
-//    {
-//        ece353_MKII_RGB_LED(false, true, false); // turn on GREEN
-//    }
-//    else
-//    {
-//        ece353_MKII_RGB_LED(true, false, false); // turn on RED
-//    }
     if(bgc_black)
     {
         ece353_MKII_RGB_LED(false, false, true); // turn on BLUE
@@ -55,7 +42,7 @@ void display_lux(float light)
 void set_bgc(void)
 {
     lux = opt3001_read_lux();  // fetch the lux value.
-    if (lux > 500) {
+    if (lux > 500) {  // If the lux value is greater than 500, set the background color black variable be false
         bgc_black = false;
     } else {
         bgc_black = true;
@@ -69,7 +56,6 @@ void set_bgc(void)
 float opt3001_read_lux(void)
 {
     // Read the Result register of OPT3001 and convert into Lux, then return.
-    /* ADD CODE */
     uint16_t temp = i2c_read_16(OPT3001_SLAVE_ADDRESS, RESULT_REG);
     float result = 0.0;
     int count = 0;
