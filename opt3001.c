@@ -9,7 +9,7 @@
 #include "opt3001.h"
 #include "math.h"
 
-static int lux_threshold = 700;
+static int lux_threshold = 200;
 
 /******************************************************************************
  * Initialize the opt3001 ambient light sensor on the MKII. This function assumes
@@ -58,17 +58,11 @@ void set_bgc(void)
 float opt3001_read_lux(void)
 {
     // Read the Result register of OPT3001 and convert into Lux, then return.
-    /* ADD CODE */
-    uint16_t temp = i2c_read_16(OPT3001_SLAVE_ADDRESS, RESULT_REG);
-    float result = 0.0;
-    int count = 0;
-    int reminder = 0;
-    while(temp>0){
-        reminder = temp%10;
-        result = (float)(result + reminder*pow(16,count));
-        temp=temp/10;
-        count++;
-    }
-    return result; // Need to modify
+    uint16_t data = i2c_read_16(OPT3001_SLAVE_ADDRESS, RESULT_REG);
+
+    uint16_t E = data >> 12;
+    uint16_t R = data - (E << 12);
+
+    return (float)(0.01 * pow(2, E) * R);
 }
 
