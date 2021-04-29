@@ -10,10 +10,8 @@ Professor Name: Younghyun Kim
 ****Project Description****
 The project will begin with a Main Page. Users will be able to select between two modes: Gaming and Setting. In the Gaming mode, the user needs to press S1 on MKII to start a new game. The airplane is controlled by the Accelerometer on MKII, and the user can move the board to move the airplane in the x or y directions accordingly. When a game is going on, pressing S1 will launch the ball from the airplane, pressing S2 will change the color of the ball if it is not launched. Enemy square will be randomly generated at the top section of the LCD screen. When the ball hit a square, if the color of the ball matches the color of the square, the square will be destroyed, the user gets scored, and then the ball will be reset. If the color does not match, or the ball is travelling beyond the top edge of the LCD screen, the ball will be reset directly.
 
-****TODOs****
-1. (Mark) Implement buzzer and light sensor by Apr 23, midnight.
-2. Implement main page.
-3. Implement Setting mode.
+****Demo Video****
+https://youtu.be/FxTAj4saZ78
 
 ****Journals****
 
@@ -80,3 +78,10 @@ The project will begin with a Main Page. Users will be able to select between tw
 3. Added TANK_CMD_LAUNCH for launching the ball from console window to TANK_CMD_t.
 4. [FIXED] Bug detected: the ball can not be launched if the tank is at it up-most row (will be fixed in the next version).
 5. TODO: print messages (and directions) to the console while important events happens in the game.
+
+**Apr 28, 2021 (J.Q.)**
+1. Updated to final version: 5.3
+2. Finished Home page and Setting mode.
+3. Integreated light sensor, led effects, and buzzer effects.
+4. Finalized comments and styles.
+5. Added detailed instructions to console window.
